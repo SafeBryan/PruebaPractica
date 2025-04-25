@@ -1,0 +1,79 @@
+require('dotenv').config();
+const pool = require('./database');
+const mysql = require('mysql2/promise');
+
+async function createDatabaseAndUser() {
+  const rootConnection = await mysql.createConnection({
+    host: process.env.MARIADB_HOST,
+    port: process.env.MARIADB_PORT,
+    user: process.env.MARIADB_ROOT_USER,
+    password: process.env.MARIADB_ROOT_PASSWORD,
+  });
+
+  await rootConnection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.MARIADB_DATABASE}\``);
+
+  await rootConnection.query(`
+    CREATE USER IF NOT EXISTS '${process.env.MARIADB_USER}'@'%' IDENTIFIED BY '${process.env.MARIADB_PASSWORD}'
+  `);
+
+  await rootConnection.query(`
+    GRANT ALL PRIVILEGES ON \`${process.env.MARIADB_DATABASE}\`.* TO '${process.env.MARIADB_USER}'@'%'
+  `);
+
+  await rootConnection.query(`FLUSH PRIVILEGES`);
+  await rootConnection.end();
+
+  console.log('✅ Base de datos y usuario verificados');
+}
+
+async function createTables() {
+  const connection = await pool.getConnection();  // Obtén una conexión del pool
+
+  await connection.execute(`
+    CREATE TABLE IF NOT EXISTS hospitales (
+      id VARCHAR(255) PRIMARY KEY,
+      nombre VARCHAR(100) NOT NULL,
+      direccion VARCHAR(255),
+      url_api VARCHAR(255)
+    )
+  `);
+
+  await connection.execute(`
+    CREATE TABLE IF NOT EXISTS especialidades (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      nombre VARCHAR(100) NOT NULL
+    )
+  `);
+
+  await connection.execute(`
+    CREATE TABLE IF NOT EXISTS medicos (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      nombre VARCHAR(100) NOT NULL,
+      especialidad_id INT,
+      hospital_id VARCHAR(255),
+      FOREIGN KEY (especialidad_id) REFERENCES especialidades(id) ON DELETE SET NULL,
+      FOREIGN KEY (hospital_id) REFERENCES hospitales(id) ON DELETE CASCADE
+    )
+  `);
+
+  await connection.execute(`
+    CREATE TABLE IF NOT EXISTS empleados (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      nombre VARCHAR(100) NOT NULL,
+      cargo VARCHAR(100),
+      hospital_id VARCHAR(255),
+      FOREIGN KEY (hospital_id) REFERENCES hospitales(id) ON DELETE CASCADE
+    )
+  `);
+
+  connection.release(); 
+
+  console.log('✅ Tablas creadas (si no existían)');
+}
+
+async function initDB() {
+  await createDatabaseAndUser();
+  await createTables();
+}
+
+module.exports = initDB;
