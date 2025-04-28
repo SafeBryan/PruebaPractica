@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const medicoController = require('../controllers/medicoController');
+const verifyToken = require('../middleware/auth');  // Importar el middleware
 
 /**
  * @swagger
@@ -52,7 +53,7 @@ const medicoController = require('../controllers/medicoController');
  *       500:
  *         description: Error del servidor
  */
-router.post('/', medicoController.createMedico);
+router.post('/', verifyToken,medicoController.createMedico);
 
 /**
  * @swagger
@@ -72,7 +73,7 @@ router.post('/', medicoController.createMedico);
  *       500:
  *         description: Error del servidor
  */
-router.get('/', medicoController.getMedicos);
+router.get('/', verifyToken,medicoController.getMedicos);
 
 /**
  * @swagger
@@ -99,7 +100,7 @@ router.get('/', medicoController.getMedicos);
  *       500:
  *         description: Error del servidor
  */
-router.get('/:id', medicoController.getMedicoById);
+router.get('/:id',verifyToken, medicoController.getMedicoById);
 
 /**
  * @swagger
@@ -128,7 +129,7 @@ router.get('/:id', medicoController.getMedicoById);
  *       500:
  *         description: Error del servidor
  */
-router.put('/:id', medicoController.updateMedico);
+router.put('/:id',verifyToken, medicoController.updateMedico);
 
 /**
  * @swagger
@@ -151,6 +152,6 @@ router.put('/:id', medicoController.updateMedico);
  *       500:
  *         description: Error del servidor
  */
-router.delete('/:id', medicoController.deleteMedico);
+router.delete('/:id', verifyToken,medicoController.deleteMedico);
 
 module.exports = router;

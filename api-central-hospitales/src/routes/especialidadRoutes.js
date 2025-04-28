@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/especialidadController');
+const verifyToken = require('../middleware/auth');  // Importar el middleware
 
 /**
  * @swagger
@@ -46,7 +47,7 @@ const controller = require('../controllers/especialidadController');
  *       500:
  *         description: Error del servidor
  */
-router.post('/', controller.createEspecialidad);
+router.post('/', verifyToken,controller.createEspecialidad);
 
 /**
  * @swagger
@@ -66,7 +67,7 @@ router.post('/', controller.createEspecialidad);
  *       500:
  *         description: Error del servidor
  */
-router.get('/', controller.getEspecialidades);
+router.get('/',verifyToken, controller.getEspecialidades);
 
 /**
  * @swagger
@@ -95,7 +96,7 @@ router.get('/', controller.getEspecialidades);
  *       500:
  *         description: Error del servidor
  */
-router.put('/:id', controller.updateEspecialidad);
+router.put('/:id', verifyToken,controller.updateEspecialidad);
 
 /**
  * @swagger
@@ -118,6 +119,6 @@ router.put('/:id', controller.updateEspecialidad);
  *       500:
  *         description: Error del servidor
  */
-router.delete('/:id', controller.deleteEspecialidad);
+router.delete('/:id', verifyToken,controller.deleteEspecialidad);
 
 module.exports = router;

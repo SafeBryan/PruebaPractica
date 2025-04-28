@@ -44,7 +44,17 @@ async function createTables() {
       nombre VARCHAR(100) NOT NULL
     )
   `);
-
+  await connection.execute(`
+    CREATE TABLE IF NOT EXISTS usuarios (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      nombre_usuario VARCHAR(100) NOT NULL UNIQUE,
+      contraseña VARCHAR(255) NOT NULL,
+      rol ENUM('admin', 'medico', 'empleado') NOT NULL,
+      hospital_id VARCHAR(255),
+      FOREIGN KEY (hospital_id) REFERENCES hospitales(id) ON DELETE SET NULL
+    )
+  `);
+  
   await connection.execute(`
     CREATE TABLE IF NOT EXISTS medicos (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -65,6 +75,42 @@ async function createTables() {
       FOREIGN KEY (hospital_id) REFERENCES hospitales(id) ON DELETE CASCADE
     )
   `);
+  const [hospitals] = await connection.execute(`
+    SELECT COUNT(*) as total FROM hospitales
+  `);
+
+  let hospitalId = null;
+
+  if (hospitals[0].total === 0) {
+    hospitalId = `HOSP-${Date.now()}`; // genera un ID único basado en el tiempo
+    await connection.execute(`
+      INSERT INTO hospitales (id, nombre, direccion, url_api)
+      VALUES (?, ?, ?, ?)
+    `, [hospitalId, 'Hospital Principal', 'Dirección de ejemplo', 'https://api.hospitalprincipal.com']);
+
+    console.log('✅ Hospital por defecto creado');
+  } else {
+    // Si ya hay hospital, tomar el primero
+    const [existing] = await connection.execute(`SELECT id FROM hospitales LIMIT 1`);
+    hospitalId = existing[0].id;
+  }
+
+  // Crear usuario admin por defecto si no existe
+  const [users] = await connection.execute(`
+    SELECT COUNT(*) as total FROM usuarios WHERE nombre_usuario = ?
+  `, ['admin']);
+
+  if (users[0].total === 0) {
+    const bcrypt = require('bcrypt');
+    const hashedPassword = await bcrypt.hash('admin123', 10);
+
+    await connection.execute(`
+      INSERT INTO usuarios (nombre_usuario, contraseña, rol, hospital_id)
+      VALUES (?, ?, ?, ?)
+    `, ['admin', hashedPassword, 'admin', hospitalId]);
+
+    console.log('✅ Usuario admin creado');
+  }
 
   connection.release(); 
 

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const hospitalController = require('../controllers/hospitalController');
+const verifyToken = require('../middleware/auth');  // Importar el middleware
 
 /**
  * @swagger
@@ -59,7 +60,7 @@ const hospitalController = require('../controllers/hospitalController');
  *                 error:
  *                   type: string
  */
-router.post('/', hospitalController.createHospital);
+router.post('/', verifyToken, hospitalController.createHospital);
 
 /**
  * @swagger
@@ -79,7 +80,7 @@ router.post('/', hospitalController.createHospital);
  *       500:
  *         description: Error al obtener los hospitales
  */
-router.get('/', hospitalController.getHospitales);
+router.get('/', verifyToken, hospitalController.getHospitales);
 
 /**
  * @swagger
@@ -106,7 +107,7 @@ router.get('/', hospitalController.getHospitales);
  *       500:
  *         description: Error al obtener el hospital
  */
-router.get('/:id', hospitalController.getHospitalById);
+router.get('/:id', verifyToken, hospitalController.getHospitalById);
 
 /**
  * @swagger
@@ -142,7 +143,7 @@ router.get('/:id', hospitalController.getHospitalById);
  *       500:
  *         description: Error al actualizar el hospital
  */
-router.put('/:id', hospitalController.updateHospital);
+router.put('/:id', verifyToken, hospitalController.updateHospital);
 
 /**
  * @swagger
@@ -172,7 +173,7 @@ router.put('/:id', hospitalController.updateHospital);
  *       500:
  *         description: Error al eliminar el hospital
  */
-router.delete('/:id', hospitalController.deleteHospital);
+router.delete('/:id',  verifyToken,hospitalController.deleteHospital);
 
 /**
  * @swagger
@@ -219,11 +220,11 @@ router.delete('/:id', hospitalController.deleteHospital);
  *           type: integer
  */
 
-router.post('/', hospitalController.createHospital);
-router.get('/', hospitalController.getHospitales);
-router.get('/:id', hospitalController.getHospitalById);
-router.put('/:id', hospitalController.updateHospital);
-router.delete('/:id', hospitalController.deleteHospital);
+router.post('/',  verifyToken,hospitalController.createHospital);
+router.get('/', verifyToken, hospitalController.getHospitales);
+router.get('/:id', verifyToken, hospitalController.getHospitalById);
+router.put('/:id',  verifyToken,hospitalController.updateHospital);
+router.delete('/:id',  verifyToken,hospitalController.deleteHospital);
 
 /**
  * @swagger
@@ -251,7 +252,7 @@ router.delete('/:id', hospitalController.deleteHospital);
  *       500:
  *         description: Error al comunicarse con la API del hospital
  */
-router.post('/:hospitalId/consultas', hospitalController.enviarConsulta);
+router.post('/:hospitalId/consultas',  verifyToken,hospitalController.enviarConsulta);
 
 
 /**
@@ -294,6 +295,6 @@ router.post('/:hospitalId/consultas', hospitalController.enviarConsulta);
  *       500:
  *         description: Error al obtener las consultas del hospital
  */
-router.get('/:hospitalId/consultas', hospitalController.getConsultasExternas);
+router.get('/:hospitalId/consultas',  verifyToken,hospitalController.getConsultasExternas);
 
 module.exports = router;

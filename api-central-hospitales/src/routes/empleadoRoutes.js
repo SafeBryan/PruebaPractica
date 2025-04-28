@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/empleadoController');
+const verifyToken = require('../middleware/auth');  // Importar el middleware
 
 /**
  * @swagger
@@ -52,7 +53,7 @@ const controller = require('../controllers/empleadoController');
  *       500:
  *         description: Error del servidor
  */
-router.post('/', controller.createEmpleado);
+router.post('/',verifyToken,controller.createEmpleado);
 
 /**
  * @swagger
@@ -72,20 +73,20 @@ router.post('/', controller.createEmpleado);
  *       500:
  *         description: Error del servidor
  */
-router.get('/', controller.getEmpleados);
+router.get('/', verifyToken,controller.getEmpleados);
 
 /**
  * @swagger
- * /empleados/hospital/{hospitalId}:
+ * /empleados/hospital/{hospital_id}:
  *   get:
  *     summary: Obtener empleados por hospital
  *     tags: [Empleados]
  *     parameters:
  *       - in: path
- *         name: hospitalId
+ *         name: hospital_id
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *         description: ID del hospital
  *     responses:
  *       200:
@@ -101,7 +102,7 @@ router.get('/', controller.getEmpleados);
  *       500:
  *         description: Error del servidor
  */
-router.get('/hospital/:hospitalId', controller.getEmpleadosPorHospital);
+router.get('/hospital/:hospital_id', verifyToken,controller.getEmpleadosPorHospital);
 
 /**
  * @swagger
@@ -130,7 +131,7 @@ router.get('/hospital/:hospitalId', controller.getEmpleadosPorHospital);
  *       500:
  *         description: Error del servidor
  */
-router.put('/:id', controller.updateEmpleado);
+router.put('/:id', verifyToken,controller.updateEmpleado);
 
 /**
  * @swagger
@@ -153,6 +154,6 @@ router.put('/:id', controller.updateEmpleado);
  *       500:
  *         description: Error del servidor
  */
-router.delete('/:id', controller.deleteEmpleado);
+router.delete('/:id', verifyToken, controller.deleteEmpleado);
 
 module.exports = router;

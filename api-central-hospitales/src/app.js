@@ -8,6 +8,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const initDB = require('./config/initDB'); 
 require('dotenv').config();
+const usuarioRoutes = require('./routes/usuarios');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -42,6 +43,7 @@ app.use('/api/hospitales', hospitalRoutes);
 app.use('/api/medicos', medicoRoutes);
 app.use('/api/especialidades', especialidadRoutes);
 app.use('/api/empleados', empleadoRoutes);
+app.use('/api', usuarioRoutes);
 
 // Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));

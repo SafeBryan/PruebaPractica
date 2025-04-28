@@ -5,7 +5,7 @@ const mysql = require('mysql2/promise');
 // Configuración del pool de conexiones
 const pool = mysql.createPool({
   host: process.env.MARIADB_HOST || 'localhost',
-  port: process.env.MARIADB_PORT || 3309,
+  port: 3309,
   user: process.env.MARIADB_USER,
   password: process.env.MARIADB_PASSWORD,
   database: process.env.MARIADB_DATABASE,

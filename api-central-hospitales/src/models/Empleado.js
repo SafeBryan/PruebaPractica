@@ -1,12 +1,12 @@
 const pool = require('../config/database');
 
 class Empleado {
-  static async create({ nombre, cargo, hospitalId }) { 
+  static async create({ nombre, cargo, hospital_id }) { 
     const connection = await pool.getConnection(); // Obtener conexión del pool
     try {
       const [result] = await connection.execute(
         'INSERT INTO empleados (nombre, cargo, hospital_id) VALUES (?, ?, ?)',
-        [nombre, cargo, hospitalId]
+        [nombre, cargo, hospital_id]
       );
       return result.insertId;
     } catch (error) {
@@ -17,14 +17,15 @@ class Empleado {
     }
   }
 
-  static async findAllByHospital(hospitalId) { 
+  static async findAllByHospital(hospital_id) { 
     const connection = await pool.getConnection(); // Obtener conexión del pool
     try {
       const [rows] = await connection.execute(
         'SELECT * FROM empleados WHERE hospital_id = ?',
-        [hospitalId]
+        [hospital_id]
       );
       return rows;
+     
     } catch (error) {
       console.error('Error al obtener empleados por hospital:', error);
       throw error;
@@ -59,12 +60,12 @@ class Empleado {
     }
   }
 
-  static async update(id, { nombre, cargo, hospitalId }) {
+  static async update(id, { nombre, cargo, hospital_id }) {
     const connection = await pool.getConnection(); // Obtener conexión del pool
     try {
       await connection.execute(
         'UPDATE empleados SET nombre = ?, cargo = ?, hospital_id = ? WHERE id = ?',
-        [nombre, cargo, hospitalId, id]
+        [nombre, cargo, hospital_id, id]
       );
     } catch (error) {
       console.error('Error al actualizar empleado:', error);
