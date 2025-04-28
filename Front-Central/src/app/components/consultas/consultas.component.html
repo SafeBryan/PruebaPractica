@@ -5,15 +5,28 @@
     </div>
     <div class="card-body">
       <form (ngSubmit)="enviarConsulta()" class="row g-3">
-        <div class="col-md-4">
-          <label class="form-label">Hospital ID</label>
-          <input
-            type="text"
-            class="form-control"
+        <div class="col-md-6">
+          <label class="form-label">Selecciona el Hospital</label>
+          <select
             [(ngModel)]="hospitalIdSeleccionado"
-            name="hospitalId"
+            name="hospitalIdSeleccionado"
+            class="form-select"
             required
-          />
+          >
+            <option *ngFor="let hospital of hospitales" [value]="hospital.id">
+              {{ hospital.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <button
+            type="button"
+            class="btn btn-secondary mt-4"
+            (click)="cargarConsultas()"
+          >
+            Cargar Consultas
+          </button>
         </div>
 
         <div class="col-md-4">
@@ -38,7 +51,7 @@
           />
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
           <label class="form-label">Tratamiento</label>
           <input
             type="text"
@@ -49,7 +62,7 @@
           />
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-6">
           <label class="form-label">ID Médico</label>
           <input
             type="text"
@@ -60,7 +73,7 @@
           />
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-6">
           <label class="form-label">ID Paciente</label>
           <input
             type="text"
@@ -74,13 +87,6 @@
         <div class="col-12 d-flex justify-content-end mt-3">
           <button type="submit" class="btn btn-success me-2">
             <i class="bi bi-send"></i> Enviar Consulta
-          </button>
-          <button
-            type="button"
-            class="btn btn-secondary"
-            (click)="cargarConsultas()"
-          >
-            <i class="bi bi-arrow-clockwise"></i> Cargar Consultas
           </button>
         </div>
       </form>
@@ -100,16 +106,18 @@
               <th>Diagnóstico</th>
               <th>Tratamiento</th>
               <th>Médico</th>
+              <th>Especialidad</th>
               <th>Paciente</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let consulta of consultas">
-              <td>{{ consulta.fecha }}</td>
+              <td>{{ consulta.fecha | date : "yyyy-MM-dd HH:mm" }}</td>
               <td>{{ consulta.diagnostico }}</td>
               <td>{{ consulta.tratamiento }}</td>
-              <td>{{ consulta.medico?.nombre || consulta.medico?.id }}</td>
-              <td>{{ consulta.paciente?.nombre || consulta.paciente?.id }}</td>
+              <td>{{ consulta.medico?.nombre }}</td>
+              <td>{{ consulta.medico?.especialidad }}</td>
+              <td>{{ consulta.paciente?.nombre }}</td>
             </tr>
           </tbody>
         </table>
