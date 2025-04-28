@@ -6,10 +6,15 @@ const { getConsultasDelHospital } = require('../services/hospitalProxyService');
 
 exports.createHospital = async (req, res) => {
   try {
-    const { nombre, direccion, urlApi } = req.body;
+    const { nombre, direccion, urlApi, url_api } = req.body;
     const hospitalId = uuidv4();
-    await Hospital.create({ id: hospitalId, nombre, direccion, urlApi });
-    res.status(201).json({ id: hospitalId, nombre, urlApi });
+    await Hospital.create({
+      id: hospitalId,
+      nombre,
+      direccion,
+      urlApi: urlApi || url_api,
+    });
+    res.status(201).json({ id: hospitalId, nombre, urlApi: urlApi || url_api });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -40,9 +45,9 @@ exports.getHospitalById = async (req, res) => {
 exports.updateHospital = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, direccion, urlApi } = req.body;
-    await Hospital.update(id, { nombre, direccion, urlApi });
-    res.json({ message: 'Hospital actualizado' });
+    const { nombre, direccion, urlApi, url_api } = req.body;
+    await Hospital.update(id, { nombre, direccion, urlApi: urlApi || url_api });
+    res.json({ message: 'Hospital actualizado correctamente' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -52,7 +57,7 @@ exports.deleteHospital = async (req, res) => {
   try {
     const { id } = req.params;
     await Hospital.delete(id);
-    res.json({ message: 'Hospital eliminado' });
+    res.json({ message: 'Hospital eliminado correctamente' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -60,7 +65,7 @@ exports.deleteHospital = async (req, res) => {
 
 exports.enviarConsulta = async (req, res) => {
   const { hospitalId } = req.params;
-  const  consultaData  = req.body;
+  const consultaData = req.body;
 
   if (!hospitalId) {
     return res.status(400).json({ error: 'El ID del hospital es requerido en la ruta.' });
@@ -72,7 +77,7 @@ exports.enviarConsulta = async (req, res) => {
       return res.status(404).json({ message: 'Hospital no encontrado' });
     }
 
-    let baseUrl = hospital.url_api;
+    let baseUrl = hospital.url_api || hospital.urlApi;
     if (!baseUrl.startsWith('http://') && !baseUrl.startsWith('https://')) {
       baseUrl = 'http://' + baseUrl;
     }
@@ -87,21 +92,17 @@ exports.enviarConsulta = async (req, res) => {
       medico: { id: consultaData.medicoId },
       paciente: { id: consultaData.pacienteId }
     };
-    
+
     const response = await axios.post(fullUrl, payload, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers: { 'Content-Type': 'application/json' }
     });
-    
-    
 
     res.json(response.data);
   } catch (error) {
     console.error('❌ Error al enviar consulta:', error.message);
     if (error.response) {
       console.error('📄 Detalles del error:', error.response.data);
-      return res.status(error.response.status).json({ 
+      return res.status(error.response.status).json({
         error: error.response.data,
         status: error.response.status
       });
@@ -110,14 +111,12 @@ exports.enviarConsulta = async (req, res) => {
   }
 };
 
-
 exports.getConsultasExternas = async (req, res) => {
-  const { hospitalId } = req.params;  // Obtener el hospitalId desde los parámetros de la URL
+  const { hospitalId } = req.params;
   try {
-    const consultas = await getConsultasDelHospital(hospitalId);  // Usar el servicio para obtener las consultas
-    res.json(consultas);  // Devolver la respuesta
+    const consultas = await getConsultasDelHospital(hospitalId);
+    res.json(consultas);
   } catch (error) {
-    res.status(500).json({ error: error.message });  // En caso de error, devolver mensaje
+    res.status(500).json({ error: error.message });
   }
 };
-

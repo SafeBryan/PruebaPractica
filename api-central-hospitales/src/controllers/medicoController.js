@@ -3,9 +3,13 @@ const { getConnection } = require('../config/database');
 
 exports.createMedico = async (req, res) => {
   try {
-    const { nombre, especialidadId, hospitalId } = req.body;
-    const medicoId = await Medico.create({ nombre, especialidadId, hospitalId });
-    res.status(201).json({ id: medicoId, nombre, hospitalId });
+    const { nombre, especialidadId, especialidad_id, hospitalId, hospital_id } = req.body;
+    const medicoId = await Medico.create({
+      nombre,
+      especialidadId: especialidadId || especialidad_id,
+      hospitalId: hospitalId || hospital_id,
+    });
+    res.status(201).json({ id: medicoId, nombre, hospitalId: hospitalId || hospital_id });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -33,8 +37,12 @@ exports.getMedicoById = async (req, res) => {
 exports.updateMedico = async (req, res) => {
   try {
     const { id } = req.params;
-    const { nombre, especialidadId, hospitalId } = req.body;
-    await Medico.update(id, { nombre, especialidadId, hospitalId });
+    const { nombre, especialidadId, especialidad_id, hospitalId, hospital_id } = req.body;
+    await Medico.update(id, {
+      nombre,
+      especialidadId: especialidadId || especialidad_id,
+      hospitalId: hospitalId || hospital_id,
+    });
     res.status(200).json({ message: 'Médico actualizado correctamente' });
   } catch (error) {
     res.status(500).json({ error: error.message });
