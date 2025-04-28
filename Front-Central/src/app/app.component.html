@@ -1,0 +1,18 @@
+<mat-drawer-container autosize="true" class="drawer-container">
+  <mat-drawer mode="side" [(opened)]="isSidenavOpen" class="drawer" fixedInViewport="true">
+  <div class="opciones">
+    <h3>Opciones</h3>
+</div>
+<div>
+    <jlop-menu></jlop-menu>
+</div>
+
+</mat-drawer>
+  
+  <mat-drawer-content autosize="true">
+    <app-header (toggleSidenav)="toggleSidenav()"></app-header>
+    <div class="main-content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>
