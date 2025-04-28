@@ -34,17 +34,29 @@ class Medico {
   }
 
   static async findAll() {
-    const connection = await pool.getConnection(); // Obtener conexión del pool
+    const connection = await pool.getConnection();
     try {
-      const [rows] = await connection.execute('SELECT * FROM medicos');
+      const [rows] = await connection.execute(`
+        SELECT 
+          m.id,
+          m.nombre,
+          m.especialidad_id,
+          e.nombre AS especialidad_nombre,
+          m.hospital_id,
+          h.nombre AS hospital_nombre
+        FROM medicos m
+        JOIN especialidades e ON m.especialidad_id = e.id
+        JOIN hospitales h ON m.hospital_id = h.id
+      `);
       return rows;
     } catch (error) {
       console.error('Error al obtener todos los médicos:', error);
       throw error;
     } finally {
-      connection.release(); // Liberar la conexión
+      connection.release();
     }
   }
+  
 
   static async findById(id) {
     const connection = await pool.getConnection(); // Obtener conexión del pool

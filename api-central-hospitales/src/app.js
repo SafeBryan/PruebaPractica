@@ -4,6 +4,8 @@ const hospitalRoutes = require('./routes/hospitalRoutes');
 const medicoRoutes = require('./routes/medicoRoutes');
 const especialidadRoutes = require('./routes/especialidadRoutes');
 const empleadoRoutes = require('./routes/empleadoRoutes');
+const authRoutes = require('./routes/authRoutes');
+const authController = require('./controllers/authController');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const initDB = require('./config/initDB'); 
@@ -25,6 +27,18 @@ const options = {
       version: '1.0.0',
       description: 'API para gestionar hospitales, médicos, especialidades y empleados.',
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    },
+    security: [{
+      bearerAuth: []
+    }],
     servers: [
       {
         url: `http://localhost:${port}/api`,
@@ -32,21 +46,31 @@ const options = {
       },
     ],
   },
-  apis: ['./src/routes/*.js'], // Asegúrate que tus rutas están en ./src/routes o ajusta esto
+  apis: ['./src/routes/*.js'],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
 
-// Rutas de la API
+// 🚀 Rutas públicas
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec)); // Swagger público
+app.use('/api/auth', authRoutes);
+
+// 🚀 Middleware para proteger solo rutas privadas
+app.use((req, res, next) => {
+  // Si la ruta empieza con /api-docs o /api/auth, NO protegemos
+  if (req.path.startsWith('/api-docs') || req.path.startsWith('/api/auth')) {
+    return next();
+  }
+  authController.verifyToken(req, res, next);
+});
+
+// 🚀 Rutas protegidas
 app.use('/api/hospitales', hospitalRoutes);
 app.use('/api/medicos', medicoRoutes);
 app.use('/api/especialidades', especialidadRoutes);
 app.use('/api/empleados', empleadoRoutes);
 
-// Swagger UI
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-// Inicializar la base de datos antes de levantar el servidor
+// 🚀 Inicializar la base de datos y arrancar servidor
 initDB()
   .then(() => {
     app.listen(port, () => {
@@ -56,5 +80,5 @@ initDB()
   })
   .catch((err) => {
     console.error('❌ Error al inicializar la base de datos:', err);
-    process.exit(1); // salir si hay error en DB
+    process.exit(1);
   });
