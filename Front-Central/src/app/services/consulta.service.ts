@@ -11,21 +11,20 @@ export interface Consulta {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConsultasService {
+  private apiUrl = 'http://localhost:3000/api/hospitales'; // ⚡ Ajustado correctamente
 
-  private baseUrl = 'http://localhost:3000/hospitales';  // Ajusta si tu API corre en otro puerto/url
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  // Obtener todas las consultas de un hospital
-  getConsultas(hospitalId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/${hospitalId}/consultas`);
+  // Obtener consultas de un hospital externo
+  getConsultasExternas(hospitalId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${hospitalId}/consultas`);
   }
 
-  // Enviar una nueva consulta
+  // Enviar una nueva consulta al hospital externo
   enviarConsulta(hospitalId: string, consulta: Consulta): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/${hospitalId}/consultas`, consulta);
+    return this.http.post(`${this.apiUrl}/${hospitalId}/consultas`, consulta);
   }
 }

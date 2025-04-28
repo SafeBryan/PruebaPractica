@@ -1,40 +1,46 @@
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { EmpleadoService } from '../../services/empleado.service';
-import { Empleado } from '../..//models/empleado.model'; // Asegúrate de que la ruta sea correcta
-import { Router, RouterModule } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-// Asegúrate de que la ruta sea correcta
+import { Empleado } from '../../models/empleado.model';
+import { HospitalService } from '../../services/hospital.service';
+import { Hospital } from '../../models/hospital.model';
+import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-empleados',
-  imports: [  
+  standalone: true,
+  imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule
+    RouterModule,
   ],
   templateUrl: './empleados.component.html',
-  styleUrls: ['./empleados.component.css']
+  styleUrls: ['./empleados.component.css'],
 })
 export class EmpleadosComponent implements OnInit {
   empleados: Empleado[] = [];
+  hospitales: Hospital[] = [];
   nuevoEmpleado: Empleado = { nombre: '', cargo: '', hospitalId: 0 };
   selectedEmpleado: Empleado | null = null;
 
-  constructor(private empleadoService: EmpleadoService) {}
+  constructor(
+    private empleadoService: EmpleadoService,
+    private hospitalService: HospitalService
+  ) {}
 
   ngOnInit(): void {
     this.cargarEmpleados();
+    this.cargarHospitales();
   }
 
   cargarEmpleados(): void {
     this.empleadoService.getEmpleados().subscribe(
       (data) => {
-        this.empleados = data;
+        this.empleados = data.map((empleado) => this.mapearEmpleado(empleado));
       },
       (error) => {
         console.error('Error al cargar empleados', error);
@@ -42,35 +48,40 @@ export class EmpleadosComponent implements OnInit {
     );
   }
 
+  cargarHospitales(): void {
+    this.hospitalService.getHospitales().subscribe(
+      (data) => {
+        this.hospitales = data;
+      },
+      (error) => {
+        console.error('Error al cargar hospitales', error);
+      }
+    );
+  }
+
   onSubmit(): void {
     if (this.selectedEmpleado) {
-      // Verificar que el ID esté definido antes de intentar actualizar
       if (this.selectedEmpleado.id !== undefined) {
-        // Actualizar empleado
         const updatedEmpleado: Empleado = {
-          nombre: this.selectedEmpleado.nombre || '',
-          cargo: this.selectedEmpleado.cargo || '',
-          hospitalId: this.selectedEmpleado.hospitalId ?? 0 // aseguramos que no sea undefined
+          nombre: this.selectedEmpleado.nombre,
+          cargo: this.selectedEmpleado.cargo,
+          hospitalId: this.selectedEmpleado.hospitalId,
         };
-
-        this.empleadoService.updateEmpleado(this.selectedEmpleado.id, updatedEmpleado).subscribe(
-          () => {
-            console.log('Empleado actualizado exitosamente');
-            this.cargarEmpleados();
-            this.resetForm();
-          },
-          (error) => {
-            console.error('Error al actualizar empleado', error);
-          }
-        );
-      } else {
-        console.error('El id del empleado no está definido');
+        this.empleadoService
+          .updateEmpleado(this.selectedEmpleado.id, updatedEmpleado)
+          .subscribe(
+            () => {
+              this.cargarEmpleados();
+              this.resetForm();
+            },
+            (error) => {
+              console.error('Error al actualizar empleado', error);
+            }
+          );
       }
     } else {
-      // Crear nuevo empleado
       this.empleadoService.createEmpleado(this.nuevoEmpleado).subscribe(
         () => {
-          console.log('Empleado creado exitosamente');
           this.cargarEmpleados();
           this.resetForm();
         },
@@ -82,14 +93,13 @@ export class EmpleadosComponent implements OnInit {
   }
 
   editarEmpleado(empleado: Empleado): void {
-    this.selectedEmpleado = { ...empleado }; // Hacemos una copia para no modificar directo
+    this.selectedEmpleado = { ...empleado };
   }
 
   eliminarEmpleado(id: number): void {
     if (confirm('¿Estás seguro de eliminar este empleado?')) {
       this.empleadoService.deleteEmpleado(id).subscribe(
         () => {
-          console.log('Empleado eliminado exitosamente');
           this.cargarEmpleados();
         },
         (error) => {
@@ -105,9 +115,11 @@ export class EmpleadosComponent implements OnInit {
   }
 
   get nombre(): string {
-    return this.selectedEmpleado ? this.selectedEmpleado.nombre : this.nuevoEmpleado.nombre;
+    return this.selectedEmpleado
+      ? this.selectedEmpleado.nombre
+      : this.nuevoEmpleado.nombre;
   }
-  
+
   set nombre(value: string) {
     if (this.selectedEmpleado) {
       this.selectedEmpleado.nombre = value;
@@ -115,11 +127,13 @@ export class EmpleadosComponent implements OnInit {
       this.nuevoEmpleado.nombre = value;
     }
   }
-  
+
   get cargo(): string {
-    return this.selectedEmpleado ? this.selectedEmpleado.cargo : this.nuevoEmpleado.cargo;
+    return this.selectedEmpleado
+      ? this.selectedEmpleado.cargo
+      : this.nuevoEmpleado.cargo;
   }
-  
+
   set cargo(value: string) {
     if (this.selectedEmpleado) {
       this.selectedEmpleado.cargo = value;
@@ -127,16 +141,28 @@ export class EmpleadosComponent implements OnInit {
       this.nuevoEmpleado.cargo = value;
     }
   }
-  
+
   get hospitalId(): number {
-    return this.selectedEmpleado ? this.selectedEmpleado.hospitalId : this.nuevoEmpleado.hospitalId;
+    return this.selectedEmpleado
+      ? this.selectedEmpleado.hospitalId
+      : this.nuevoEmpleado.hospitalId;
   }
-  
+
   set hospitalId(value: number) {
     if (this.selectedEmpleado) {
       this.selectedEmpleado.hospitalId = value;
     } else {
       this.nuevoEmpleado.hospitalId = value;
     }
+  }
+
+  private mapearEmpleado(empleado: any): Empleado {
+    return {
+      id: empleado.id,
+      nombre: empleado.nombre,
+      cargo: empleado.cargo,
+      hospitalId: empleado.hospitalId ?? empleado.hospital_id,
+      hospitalNombre: empleado.hospitalNombre ?? empleado.hospital_nombre,
+    };
   }
 }
