@@ -1,14 +1,14 @@
-<mat-drawer-container autosize="true" class="drawer-container">
+<!-- Si showMenu es true, muestra el layout con drawer y header -->
+<mat-drawer-container *ngIf="showMenu" autosize="true" class="drawer-container"> 
   <mat-drawer mode="side" [(opened)]="isSidenavOpen" class="drawer" fixedInViewport="true">
-  <div class="opciones">
-    <h3>Opciones</h3>
-</div>
-<div>
-    <jlop-menu></jlop-menu>
-</div>
+    <div class="opciones">
+      <h3>Opciones</h3>
+    </div>
+    <div>
+      <jlop-menu></jlop-menu>
+    </div>
+  </mat-drawer>
 
-</mat-drawer>
-  
   <mat-drawer-content autosize="true">
     <app-header (toggleSidenav)="toggleSidenav()"></app-header>
     <div class="main-content">
@@ -16,3 +16,9 @@
     </div>
   </mat-drawer-content>
 </mat-drawer-container>
+
+<!-- Si showMenu es false (como en /login), solo carga el componente de login -->
+<ng-container *ngIf="!showMenu">
+  <router-outlet></router-outlet>
+</ng-container>
+

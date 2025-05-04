@@ -1,6 +1,7 @@
 require('dotenv').config();
 const pool = require('./database');
 const mysql = require('mysql2/promise');
+const bcrypt = require('bcryptjs');
 
 async function createDatabaseAndUser() {
   const rootConnection = await mysql.createConnection({
@@ -27,7 +28,7 @@ async function createDatabaseAndUser() {
 }
 
 async function createTables() {
-  const connection = await pool.getConnection();  // Obtén una conexión del pool
+  const connection = await pool.getConnection();
 
   await connection.execute(`
     CREATE TABLE IF NOT EXISTS usuarios (
@@ -75,14 +76,34 @@ async function createTables() {
     )
   `);
 
-  connection.release(); 
+  // Crea el usuario 'admin' con contraseña '1234' si no existe
+  const [rows] = await connection.execute(
+    `SELECT * FROM usuarios WHERE username = ?`,
+    ['admin']
+  );
 
+  if (rows.length === 0) {
+    const hashedPassword = await bcrypt.hash('1234', 10);
+    await connection.execute(
+      `INSERT INTO usuarios (username, password) VALUES (?, ?)`,
+      ['admin', hashedPassword]
+    );
+    console.log('✅ Usuario admin creado');
+  } else {
+    console.log('ℹ️ Usuario admin ya existe');
+  }
+
+  connection.release();
   console.log('✅ Tablas creadas (si no existían)');
 }
 
 async function initDB() {
-  await createDatabaseAndUser();
-  await createTables();
+  try {
+    await createDatabaseAndUser();
+    await createTables();
+  } catch (err) {
+    console.error('❌ Error al inicializar la base de datos:', err);
+  }
 }
 
 module.exports = initDB;
