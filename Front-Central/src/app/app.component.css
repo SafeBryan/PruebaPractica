@@ -67,4 +67,13 @@ background-color: rgba(255, 255, 255, 0.589);
   button {
     cursor: pointer;
   }
+  .fondo-login {
+    background-image: url('../assets//image/hospital-bg.jpg'); /* tu imagen aquí */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    backdrop-filter: none;
+    background-color: transparent !important;
+  }
   

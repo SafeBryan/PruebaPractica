@@ -1,11 +1,17 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router'; // Importar Router
 
 @Component({
   selector: 'app-inicio',
-  imports: [],
   templateUrl: './inicio.component.html',
-  styleUrl: './inicio.component.css'
+  styleUrls: ['./inicio.component.css'], // corregido: styleUrl → styleUrls
+  standalone: true,
+  imports: [],
 })
 export class InicioComponent {
+  constructor(private router: Router) {}
 
+  irAGestion(): void {
+    this.router.navigate(['/hospitales']);
+  }
 }

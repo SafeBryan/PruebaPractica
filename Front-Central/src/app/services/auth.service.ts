@@ -1,11 +1,9 @@
-// src/app/services/auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { LoginRequest } from '../models/login-request.model';
 
-// src/app/services/auth.service.ts
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private nodeUrl = 'http://localhost:3000/api/auth/login';
@@ -19,11 +17,23 @@ export class AuthService {
     return new Observable((observer) => {
       this.http.post<{ token: string }>(this.nodeUrl, data).subscribe({
         next: (resNode) => {
-          localStorage.setItem('tokenNode', resNode.token);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('tokenNode', resNode.token);
+          }
 
           this.http.post<{ token: string }>(this.springUrl, data).subscribe({
             next: (resSpring) => {
-              localStorage.setItem('tokenSpring', resSpring.token);
+              if (typeof window !== 'undefined') {
+                localStorage.setItem('tokenSpring', resSpring.token);
+                localStorage.setItem(
+                  'usuario',
+                  JSON.stringify({
+                    tokenNode: resNode.token,
+                    tokenSpring: resSpring.token,
+                  })
+                );
+              }
+
               observer.next({
                 tokenNode: resNode.token,
                 tokenSpring: resSpring.token,
@@ -39,17 +49,22 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('tokenNode');
-    localStorage.removeItem('tokenSpring');
+    if (typeof window !== 'undefined') {
+      localStorage.clear();
+    }
     this.router.navigate(['/login']);
   }
 
   getTokenNode(): string | null {
-    return localStorage.getItem('tokenNode');
+    return typeof window !== 'undefined'
+      ? localStorage.getItem('tokenNode')
+      : null;
   }
 
   getTokenSpring(): string | null {
-    return localStorage.getItem('tokenSpring');
+    return typeof window !== 'undefined'
+      ? localStorage.getItem('tokenSpring')
+      : null;
   }
 
   isLoggedIn(): boolean {
