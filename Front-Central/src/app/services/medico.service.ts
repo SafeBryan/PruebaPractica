@@ -16,6 +16,10 @@ export class MedicoService {
     return this.http.get<Medico[]>(this.apiUrl);
   }
 
+  getMedicosByHospital(hospitalId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/hospital/${hospitalId}`);
+  }
+
   // Obtener un médico por ID
   getMedicoById(id: number): Observable<Medico> {
     return this.http.get<Medico>(`${this.apiUrl}/${id}`);

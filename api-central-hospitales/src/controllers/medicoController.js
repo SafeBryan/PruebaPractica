@@ -58,3 +58,15 @@ exports.deleteMedico = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+exports.getMedicosByHospital = async (req, res) => {
+  const { hospitalId } = req.params;
+  try {
+    const medicos = await Medico.findByHospitalId(hospitalId);
+    res.json(medicos);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener médicos del hospital.' });
+  }
+};
+

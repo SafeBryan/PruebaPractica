@@ -97,6 +97,34 @@ class Medico {
       connection.release(); // Liberar la conexión
     }
   }
+
+  static async findByIds(ids) {
+    if (!ids || ids.length === 0) return [];
+  
+    const connection = await pool.getConnection();
+    try {
+      const placeholders = ids.map(() => '?').join(',');
+      const [rows] = await connection.execute(
+        `
+        SELECT 
+          m.id,
+          m.nombre,
+          e.nombre AS especialidad
+        FROM medicos m
+        JOIN especialidades e ON m.especialidad_id = e.id
+        WHERE m.id IN (${placeholders})
+        `,
+        ids
+      );
+      return rows;
+    } catch (error) {
+      console.error('Error al buscar médicos por IDs:', error);
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+  
 }
 
 module.exports = Medico;

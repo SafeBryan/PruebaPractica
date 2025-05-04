@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Consulta {
   fecha: string;
   diagnostico: string;
   tratamiento: string;
-  medicoId: string;
-  pacienteId: string;
+  medicoId: number;
+  pacienteId: number;
 }
 
 @Injectable({
@@ -18,13 +18,25 @@ export class ConsultasService {
 
   constructor(private http: HttpClient) {}
 
-  // Obtener consultas de un hospital externo
   getConsultasExternas(hospitalId: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/${hospitalId}/consultas`);
+    const tokenSpring = localStorage.getItem('tokenSpring');
+    const headers = new HttpHeaders({
+      'Authorization-Spring': tokenSpring ? `Bearer ${tokenSpring}` : '',
+    });
+
+    return this.http.get<any[]>(`${this.apiUrl}/${hospitalId}/consultas`, {
+      headers,
+    });
   }
 
-  // Enviar una nueva consulta al hospital externo
   enviarConsulta(hospitalId: string, consulta: Consulta): Observable<any> {
-    return this.http.post(`${this.apiUrl}/${hospitalId}/consultas`, consulta);
+    const tokenSpring = localStorage.getItem('tokenSpring');
+    const headers = new HttpHeaders({
+      'Authorization-Spring': tokenSpring ? `Bearer ${tokenSpring}` : '',
+    });
+
+    return this.http.post(`${this.apiUrl}/${hospitalId}/consultas`, consulta, {
+      headers,
+    });
   }
 }

@@ -14,85 +14,46 @@ public class Consulta {
     private String diagnostico;
     private String tratamiento;
 
-    @Column(name = "hospital_id") // Agregamos la columna en la base de datos
-    private String hospitalId; // Nuevo campo para el ID del hospital
+    @Column(name = "hospital_id")
+    private String hospitalId;
 
-    @ManyToOne
-    @JoinColumn(name = "medico_id")
-    private Medico medico;
+    @Column(name = "medico_id")
+    private Long medicoId;
 
     @ManyToOne
     @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 
-    public Consulta() {
-    }
+    public Consulta() {}
 
-    public Consulta(Long id, LocalDateTime fecha, String diagnostico, String tratamiento, String hospitalId, Medico medico, Paciente paciente) {
+    public Consulta(Long id, LocalDateTime fecha, String diagnostico, String tratamiento, String hospitalId, Long medicoId, Paciente paciente) {
         this.id = id;
         this.fecha = fecha;
         this.diagnostico = diagnostico;
         this.tratamiento = tratamiento;
         this.hospitalId = hospitalId;
-        this.medico = medico;
+        this.medicoId = medicoId;
         this.paciente = paciente;
     }
 
-    // Getters y setters para hospitalId
-    public String getHospitalId() {
-        return hospitalId;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setHospitalId(String hospitalId) {
-        this.hospitalId = hospitalId;
-    }
+    public LocalDateTime getFecha() { return fecha; }
+    public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
 
-    // Getters y setters existentes (id, fecha, diagnostico, tratamiento, medico, paciente)
-    public Long getId() {
-        return id;
-    }
+    public String getDiagnostico() { return diagnostico; }
+    public void setDiagnostico(String diagnostico) { this.diagnostico = diagnostico; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getTratamiento() { return tratamiento; }
+    public void setTratamiento(String tratamiento) { this.tratamiento = tratamiento; }
 
-    public LocalDateTime getFecha() {
-        return fecha;
-    }
+    public String getHospitalId() { return hospitalId; }
+    public void setHospitalId(String hospitalId) { this.hospitalId = hospitalId; }
 
-    public void setFecha(LocalDateTime fecha) {
-        this.fecha = fecha;
-    }
+    public Long getMedicoId() { return medicoId; }
+    public void setMedicoId(Long medicoId) { this.medicoId = medicoId; }
 
-    public String getDiagnostico() {
-        return diagnostico;
-    }
-
-    public void setDiagnostico(String diagnostico) {
-        this.diagnostico = diagnostico;
-    }
-
-    public String getTratamiento() {
-        return tratamiento;
-    }
-
-    public void setTratamiento(String tratamiento) {
-        this.tratamiento = tratamiento;
-    }
-
-    public Medico getMedico() {
-        return medico;
-    }
-
-    public void setMedico(Medico medico) {
-        this.medico = medico;
-    }
-
-    public Paciente getPaciente() {
-        return paciente;
-    }
-
-    public void setPaciente(Paciente paciente) {
-        this.paciente = paciente;
-    }
+    public Paciente getPaciente() { return paciente; }
+    public void setPaciente(Paciente paciente) { this.paciente = paciente; }
 }

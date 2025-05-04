@@ -153,4 +153,31 @@ router.put('/:id', medicoController.updateMedico);
  */
 router.delete('/:id', medicoController.deleteMedico);
 
+/**
+ * @swagger
+ * /medicos/hospital/{hospitalId}:
+ *   get:
+ *     summary: Obtener todos los médicos por hospital
+ *     tags: [Médicos]
+ *     parameters:
+ *       - in: path
+ *         name: hospitalId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del hospital
+ *     responses:
+ *       200:
+ *         description: Lista de médicos del hospital
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Medico'
+ *       500:
+ *         description: Error del servidor
+ */
+router.get('/hospital/:hospitalId', medicoController.getMedicosByHospital);
+
 module.exports = router;

@@ -66,9 +66,17 @@ exports.deleteHospital = async (req, res) => {
 exports.enviarConsulta = async (req, res) => {
   const { hospitalId } = req.params;
   const consultaData = req.body;
+  const rawToken = req.headers['authorization-spring'];
+
+  // 🧪 Muestra el token recibido en consola
+  console.log('🔐 Token recibido desde Angular:', rawToken);
 
   if (!hospitalId) {
     return res.status(400).json({ error: 'El ID del hospital es requerido en la ruta.' });
+  }
+
+  if (!rawToken) {
+    return res.status(401).json({ error: 'Token Spring no proporcionado en el header.' });
   }
 
   try {
@@ -83,6 +91,7 @@ exports.enviarConsulta = async (req, res) => {
     }
 
     const fullUrl = new URL('/consultas', baseUrl).href;
+    const tokenSpring = rawToken.startsWith('Bearer ') ? rawToken : `Bearer ${rawToken}`;
 
     const payload = {
       fecha: consultaData.fecha,
@@ -90,33 +99,41 @@ exports.enviarConsulta = async (req, res) => {
       tratamiento: consultaData.tratamiento,
       hospitalId: hospital.id,
       medico: { id: consultaData.medicoId },
-      paciente: { id: consultaData.pacienteId }
+      paciente: { id: consultaData.pacienteId },
     };
 
     const response = await axios.post(fullUrl, payload, {
-      headers: { 'Content-Type': 'application/json' }
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: tokenSpring,
+      },
     });
 
-    res.json(response.data);
+    res.status(201).json(response.data);
   } catch (error) {
     console.error('❌ Error al enviar consulta:', error.message);
     if (error.response) {
       console.error('📄 Detalles del error:', error.response.data);
       return res.status(error.response.status).json({
         error: error.response.data,
-        status: error.response.status
+        status: error.response.status,
       });
     }
     res.status(500).json({ error: 'Error al comunicarse con la API del hospital.' });
   }
 };
 
+
+
 exports.getConsultasExternas = async (req, res) => {
   const { hospitalId } = req.params;
+  const tokenSpring = req.headers['authorization-spring']; // <-- token de Spring desde el frontend
+
   try {
-    const consultas = await getConsultasDelHospital(hospitalId);
+    const consultas = await getConsultasDelHospital(hospitalId, tokenSpring);
     res.json(consultas);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
