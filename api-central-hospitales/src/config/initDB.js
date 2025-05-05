@@ -1,21 +1,90 @@
-safebryan@hospital-central:~/PruebaPractica/api-central-hospitales$ npm start
+require('dotenv').config();
+const pool = require('./database');
+const mysql = require('mysql2/promise');
 
-> api-central-hospitales@1.0.0 start
-> node src/app.js
+async function createDatabaseAndUser() {
+  const rootConnection = await mysql.createConnection({
+    host: process.env.MARIADB_HOST,
+    port: process.env.MARIADB_PORT,
+    user: process.env.MARIADB_ROOT_USER,
+    password: process.env.MARIADB_ROOT_PASSWORD,
+  });
 
-❌ Error al inicializar la base de datos: Error: connect ECONNREFUSED 10.0.0.4:3306
-    at Object.createConnectionPromise [as createConnection] (/home/safebryan/PruebaPractica/api-central-hospitales/node_modules/mysql2/promise.js:19:31)
-    at createDatabaseAndUser (/home/safebryan/PruebaPractica/api-central-hospitales/src/config/initDB.js:6:38)
-    at initDB (/home/safebryan/PruebaPractica/api-central-hospitales/src/config/initDB.js:86:9)
-    at Object.<anonymous> (/home/safebryan/PruebaPractica/api-central-hospitales/src/app.js:74:1)
-    at Module._compile (node:internal/modules/cjs/loader:1364:14)
-    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
-    at Module.load (node:internal/modules/cjs/loader:1203:32)
-    at Module._load (node:internal/modules/cjs/loader:1019:12)
-    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:128:12)
-    at node:internal/main/run_main_module:28:49 {
-  code: 'ECONNREFUSED',
-  errno: -111,
-  sqlState: undefined
+  await rootConnection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.MARIADB_DATABASE}\``);
+
+  await rootConnection.query(`
+    CREATE USER IF NOT EXISTS '${process.env.MARIADB_USER}'@'%' IDENTIFIED BY '${process.env.MARIADB_PASSWORD}'
+  `);
+
+  await rootConnection.query(`
+    GRANT ALL PRIVILEGES ON \`${process.env.MARIADB_DATABASE}\`.* TO '${process.env.MARIADB_USER}'@'%'
+  `);
+
+  await rootConnection.query(`FLUSH PRIVILEGES`);
+  await rootConnection.end();
+
+  console.log('✅ Base de datos y usuario verificados');
 }
-safebryan@hospital-central:~/PruebaPractica/api-central-hospitales$
+
+async function createTables() {
+  const connection = await pool.getConnection();
+
+  // ⚙️ Tabla usuarios con rol y medico_id
+  await connection.execute(`
+    CREATE TABLE IF NOT EXISTS usuarios (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      username VARCHAR(100) NOT NULL UNIQUE,
+      password VARCHAR(255) NOT NULL,
+      rol VARCHAR(50) NOT NULL,
+      medico_id BIGINT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  await connection.execute(`
+    CREATE TABLE IF NOT EXISTS hospitales (
+      id VARCHAR(255) PRIMARY KEY,
+      nombre VARCHAR(100) NOT NULL,
+      direccion VARCHAR(255),
+      url_api VARCHAR(255)
+    )
+  `);
+
+  await connection.execute(`
+    CREATE TABLE IF NOT EXISTS especialidades (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      nombre VARCHAR(100) NOT NULL
+    )
+  `);
+
+  await connection.execute(`
+    CREATE TABLE IF NOT EXISTS medicos (
+      id INT PRIMARY KEY,
+      nombre VARCHAR(100) NOT NULL,
+      especialidad_id INT,
+      hospital_id VARCHAR(255),
+      FOREIGN KEY (especialidad_id) REFERENCES especialidades(id) ON DELETE SET NULL,
+      FOREIGN KEY (hospital_id) REFERENCES hospitales(id) ON DELETE CASCADE
+    )
+  `);
+
+  await connection.execute(`
+    CREATE TABLE IF NOT EXISTS empleados (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      nombre VARCHAR(100) NOT NULL,
+      cargo VARCHAR(100),
+      hospital_id VARCHAR(255),
+      FOREIGN KEY (hospital_id) REFERENCES hospitales(id) ON DELETE CASCADE
+    )
+  `);
+
+  connection.release();
+  console.log('✅ Tablas creadas (si no existían)');
+}
+
+async function initDB() {
+  await createDatabaseAndUser();
+  await createTables();
+}
+
+module.exports = initDB;
