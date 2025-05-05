@@ -5,7 +5,7 @@ import { Paciente } from '../models/paciente.model';
 
 @Injectable({ providedIn: 'root' })
 export class PacienteService {
-  private apiUrl = 'http://localhost:8080/pacientes';
+  private apiUrl = 'http://20.121.44.245:8080/pacientes';
 
   constructor(private http: HttpClient) {}
 
@@ -31,7 +31,11 @@ export class PacienteService {
   }
 
   actualizarPaciente(id: number, paciente: Paciente): Observable<Paciente> {
-    return this.http.put<Paciente>(`${this.apiUrl}/${id}`, paciente, this.getHeaders());
+    return this.http.put<Paciente>(
+      `${this.apiUrl}/${id}`,
+      paciente,
+      this.getHeaders()
+    );
   }
 
   eliminarPaciente(id: number): Observable<void> {

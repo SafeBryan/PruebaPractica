@@ -6,8 +6,8 @@ import { LoginRequest } from '../models/login-request.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private nodeUrl = 'https://hospital-central.duckdns.org/api/auth/login';
-  private springUrl = 'https://hospital-cuenca.duckdns.org/api/auth/login';
+  private nodeUrl = 'http://74.235.206.253:3000/api/auth/login';
+  private springUrl = 'http://135.222.40.65:8080/api/auth/login';
 
   constructor(private http: HttpClient, private router: Router) {}
 

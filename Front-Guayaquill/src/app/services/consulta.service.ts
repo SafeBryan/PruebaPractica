@@ -7,7 +7,7 @@ import { Consulta } from '../models/consulta.model';
   providedIn: 'root',
 })
 export class ConsultasService {
-  private apiUrl = 'http://localhost:8080/consultas';
+  private apiUrl = 'http://20.121.44.245:8080/consultas';
 
   constructor(private http: HttpClient) {}
 

@@ -7,7 +7,7 @@ import { Consulta } from '../models/consulta.model';
   providedIn: 'root',
 })
 export class ConsultasService {
-  private apiUrl = 'https://hospital-cuenca.duckdns.org/consultas';
+  private apiUrl = 'http://135.222.40.65:8080/consultas';
 
   constructor(private http: HttpClient) {}
 
