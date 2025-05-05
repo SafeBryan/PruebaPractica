@@ -41,8 +41,8 @@ const options = {
     }],
     servers: [
       {
-        url: `http://localhost:${port}/api`,
-        description: 'Servidor local'
+        url: `http://74.235.206.253/api`,
+        description: 'Servidor en Azure'
       },
     ],
   },
@@ -74,8 +74,8 @@ app.use('/api/empleados', empleadoRoutes);
 initDB()
   .then(() => {
     app.listen(port, () => {
-      console.log(`✅ Servidor central escuchando en http://localhost:${port}`);
-      console.log(`📘 Documentación de Swagger disponible en http://localhost:${port}/api-docs`);
+      console.log(`✅ Servidor central escuchando en http://74.235.206.253:${port}`);
+      console.log(`📘 Documentación de Swagger disponible en http://74.235.206.253:${port}/api-docs`);
     });
   })
   .catch((err) => {
