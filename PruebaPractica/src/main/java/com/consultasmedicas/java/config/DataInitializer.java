@@ -19,14 +19,13 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // Verificar si el usuario admin ya existe
         if (usuarioRepository.findByUsername("admin").isEmpty()) {
             Usuario admin = new Usuario();
             admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("admin123")); // Contraseña encriptada
+            admin.setPassword(passwordEncoder.encode("admin123"));
+            admin.setRol("admin"); // <-- Aquí corriges el error
             usuarioRepository.save(admin);
             System.out.println("Usuario admin creado con éxito");
         }
-
     }
 }
