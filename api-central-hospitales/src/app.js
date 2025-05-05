@@ -52,10 +52,10 @@ const options = {
     }],
     servers: [
       {
-        url: `http://74.235.206.253/api`,
+        url: `http://74.235.206.253:3000/api`,
         description: 'Servidor en Azure'
       },
-    ],
+    ],    
   },
   apis: ['./src/routes/*.js'],
 };
