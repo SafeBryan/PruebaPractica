@@ -1,4 +1,8 @@
--- init.sql
-CREATE USER IF NOT EXISTS 'safebryan'@'%' IDENTIFIED BY '081012';
-GRANT ALL PRIVILEGES ON consultas_medicas.* TO 'safebryan'@'%';
+-- Crear el usuario solo si no existe
+CREATE USER IF NOT EXISTS 'hospital1_user'@'%' IDENTIFIED BY 'password123';
+
+-- Dar todos los privilegios sobre la base de datos `hospital1`
+GRANT ALL PRIVILEGES ON hospital1.* TO 'hospital1_user'@'%';
+
+-- Aplicar los cambios
 FLUSH PRIVILEGES;
