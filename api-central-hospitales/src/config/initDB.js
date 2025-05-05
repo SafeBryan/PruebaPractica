@@ -11,7 +11,6 @@ async function createDatabaseAndUser() {
     });
   
     await rootConnection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.MARIADB_DATABASE}\``);
-    await rootConnection.query(`FLUSH PRIVILEGES`);
     await rootConnection.end();
   
     console.log('✅ Base de datos verificada');
