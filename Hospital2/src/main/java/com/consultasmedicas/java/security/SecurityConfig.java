@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Endpoints públicos
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // 👉 IMPORTANTE
                         .requestMatchers(
                                 "/api/auth/login",
                                 "/v3/api-docs/**",
@@ -40,13 +40,10 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/webjars/**"
                         ).permitAll()
-
-                        // Permitir POST a /api/hospitales/{id}/consultas para usuarios autenticados
                         .requestMatchers(HttpMethod.POST, "/api/hospitales/*/consultas").authenticated()
-
-                        // Cualquier otra ruta requiere autenticación
                         .anyRequest().authenticated()
                 )
+
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
