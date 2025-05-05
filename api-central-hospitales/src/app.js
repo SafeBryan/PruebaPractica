@@ -10,6 +10,9 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const initDB = require('./config/initDB'); 
 require('dotenv').config();
+console.log('Tipo de initDB:', typeof initDB);
+console.log('Contenido de initDB:', initDB);
+
 
 const app = express();
 const port = process.env.PORT || 3000;
