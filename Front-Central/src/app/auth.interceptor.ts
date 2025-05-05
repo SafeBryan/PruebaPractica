@@ -20,7 +20,7 @@ export class AuthInterceptor implements HttpInterceptor {
     const tokenNode = this.authService.getTokenNode();
     const tokenSpring = this.authService.getTokenSpring();
 
-    if (request.url.includes('localhost:3000')) {
+    if (request.url.includes('74.235.206.253:3000')) {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${tokenNode}`,
