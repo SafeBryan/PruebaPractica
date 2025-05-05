@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:11.3
+    container_name: mariadb-consultas
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    ports:
+      - "${MARIADB_PORT}:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - consultas-net
+
+volumes:
+  mariadb_data:
+
+networks:
+  consultas-net:
+    driver: bridge
