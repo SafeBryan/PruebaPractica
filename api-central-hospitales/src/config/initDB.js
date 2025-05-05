@@ -3,21 +3,26 @@ const pool = require('./database');
 const mysql = require('mysql2/promise');
 
 async function createDatabaseAndUser() {
-  const rootConnection = await mysql.createConnection({
-    host: process.env.MARIADB_HOST,
-    port: process.env.MARIADB_PORT,
-    user: process.env.MARIADB_USER,
-    password: process.env.MARIADB_PASSWORD,    
-  });
+    const rootConnection = await mysql.createConnection({
+      host: process.env.MARIADB_HOST,
+      port: process.env.MARIADB_PORT,
+      user: process.env.MARIADB_ROOT_USER,
+      password: process.env.MARIADB_ROOT_PASSWORD,
+    });
+  
+    await rootConnection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.MARIADB_DATABASE}\``);
 
   await rootConnection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.MARIADB_DATABASE}\``);
 
+  /*
   await rootConnection.query(`
     CREATE USER IF NOT EXISTS '${process.env.MARIADB_USER}'@'%' IDENTIFIED BY '${process.env.MARIADB_PASSWORD}'
   `);
+
   await rootConnection.query(`
     GRANT ALL PRIVILEGES ON \`${process.env.MARIADB_DATABASE}\`.* TO '${process.env.MARIADB_USER}'@'%'
   `);
+  */
   
 
   await rootConnection.query(`FLUSH PRIVILEGES`);
