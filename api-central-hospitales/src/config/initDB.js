@@ -6,8 +6,8 @@ async function createDatabaseAndUser() {
   const rootConnection = await mysql.createConnection({
     host: process.env.MARIADB_HOST,
     port: process.env.MARIADB_PORT,
-    user: process.env.MARIADB_ROOT_USER,
-    password: process.env.MARIADB_ROOT_PASSWORD,
+    user: process.env.MARIADB_USER,
+    password: process.env.MARIADB_PASSWORD,    
   });
 
   await rootConnection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.MARIADB_DATABASE}\``);
