@@ -1,5 +1,6 @@
 package com.consultasmedicas.java.security;
 
+import com.consultasmedicas.java.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,10 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
+import java.util.Arrays;
 
 @Configuration
 public class SecurityConfig {
@@ -52,22 +52,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(
-                "http://localhost:4200",
-                "https://tourmaline-gumption-11dde3.netlify.app"
-        ));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
+    
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -86,4 +71,20 @@ public class SecurityConfig {
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
+    @Bean
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(Arrays.asList(
+                "http://localhost:4200",
+                "https://tourmaline-gumption-11dde3.netlify.app"
+        ));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(Arrays.asList("*"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+
 }
