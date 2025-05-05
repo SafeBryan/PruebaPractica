@@ -1,0 +1,43 @@
+si por si acaso necesitas datos
+1001	En un muy buen estado	2023-05-10 09:30:00.000	nada	101	2	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+1002	Dermatitis atópica	2023-05-15 11:00:00.000	Crema con corticoides 2 veces/día por 1 semana	104	5	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+1003	Esguince tobillo grado II	2023-05-18 16:45:00.000	Reposo, hielo, elevación y antiinflamatorios	103	1	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+1004	Migraña crónica	2023-05-20 10:15:00.000	Topiramato 25mg/día incrementando gradualmente	105	3	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+1005	Control diabetes	2023-05-22 14:30:00.000	Ajuste dosis metformina a 850mg 2 veces/día	101	4	cc2b8529-7658-49ae-9be1-97a85dad6a1e
+1012	Dolor abdominal agudo	2025-04-24 10:30:00.000	Reposo, dieta blanda y observación	101	2	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+1013	Dolor abdominal agudo	2025-04-24 10:30:00.000	Reposo, dieta blanda y observación	101	2	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+1014	Dolor abdominal agudo	2025-04-24 10:30:00.000	Reposo, dieta blanda y observación	101	2	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+1015	Dolor abdominal agudo	2025-04-24 10:30:00.000	Reposo, dieta blanda y observación	101	2	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+1016	Dolor abdominal agudo	2025-04-24 10:30:00.000	Reposo, dieta blanda y observación	101	2	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+1017	En un muy buen estado	2023-05-10 09:30:00.000	nada	102	4	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+1018	nada	2023-05-10 09:30:00.000	nada	103	2	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+1019	Nada	2025-05-04 16:57:00.000	Nada	101	1	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+1023	Nada	2025-05-04 19:55:00.000	Nada	105		a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+1024	Hola	2025-05-04 20:01:00.000	Hola	105	2	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+1	$2a$10$ukp.dvLuCreYKbq6oVZvi./oWj7VCcsj0lZ6YAu/snRWCRyMGlTea	admin	admin	
+2	$2a$10$ukp.dvLuCreYKbq6oVZvi./oWj7VCcsj0lZ6YAu/snRWCRyMGlTea	dr.pazmino	doctor	101
+3	$2a$10$ukp.dvLuCreYKbq6oVZvi./oWj7VCcsj0lZ6YAu/snRWCRyMGlTea	dr.villacis	doctor	103
+4	$2a$10$ukp.dvLuCreYKbq6oVZvi./oWj7VCcsj0lZ6YAu/snRWCRyMGlTea	dr.barrera	doctor	104
+5	$2a$10$ukp.dvLuCreYKbq6oVZvi./oWj7VCcsj0lZ6YAu/snRWCRyMGlTea	dra.gallegoz	doctor	105
+1	40	Alergia a penicilina, asma leve	Juan Velazco
+2	42	Hipertensión controlada	Carlos Rodríguez
+3	28	Ninguna alergia conocida	Ana López
+4	65	Diabetes tipo 2, cirugía de rodilla 2018	Jorge Martínez
+5	50	Hipotiroidismo, osteoporosis	Lucía Sánchez
+7	20	Alergia a penicilina, asma leve	paco
+
+
+y estos del central
+1	Cardiología
+2	Nefrología
+a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60	Hospital Central Actualizado	Av. Principal 456	http://localhost:8080
+cc2b8529-7658-49ae-9be1-97a85dad6a1e	VozAndes	Huachi	http://localhost:8081
+101	Dr. Pazmino	2	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+103	Dr.Villacis	1	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+104	Dr. Barrera	1	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+105	Dra. Gallegoz	1	a5dacef5-9fe4-4b1a-89dc-ea9d8a1bed60
+1	admin	$2a$10$ukp.dvLuCreYKbq6oVZvi./oWj7VCcsj0lZ6YAu/snRWCRyMGlTea	admin		2025-05-05 00:26:41.000
+2	dr.pazmino	$2a$10$ukp.dvLuCreYKbq6oVZvi./oWj7VCcsj0lZ6YAu/snRWCRyMGlTea	doctor	101	2025-05-05 00:26:41.000
+3	dr.villacis	$2a$10$ukp.dvLuCreYKbq6oVZvi./oWj7VCcsj0lZ6YAu/snRWCRyMGlTea	doctor	103	2025-05-05 00:26:41.000
+4	dr.barrera	$2a$10$ukp.dvLuCreYKbq6oVZvi./oWj7VCcsj0lZ6YAu/snRWCRyMGlTea	doctor	104	2025-05-05 00:26:41.000
+5	dra.gallegoz	$2a$10$ukp.dvLuCreYKbq6oVZvi./oWj7VCcsj0lZ6YAu/snRWCRyMGlTea	doctor	105	2025-05-05 00:26:41.000

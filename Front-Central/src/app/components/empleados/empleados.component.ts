@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { EmpleadoService } from '../../services/empleado.service';
-import { Empleado } from '../../models/empleado.model';
-import { HospitalService } from '../../services/hospital.service';
-import { Hospital } from '../../models/hospital.model';
-import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
+import { EmpleadoService } from '../../services/empleado.service';
+import { HospitalService } from '../../services/hospital.service';
+import { Empleado } from '../../models/empleado.model';
+import { Hospital } from '../../models/hospital.model';
 
 @Component({
   selector: 'app-empleados',
@@ -14,18 +14,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
     HttpClientModule,
-    RouterModule,
+    RouterModule
   ],
   templateUrl: './empleados.component.html',
-  styleUrls: ['./empleados.component.css'],
+  styleUrls: ['./empleados.component.css']
 })
 export class EmpleadosComponent implements OnInit {
   empleados: Empleado[] = [];
   hospitales: Hospital[] = [];
+  mostrarModal: boolean = false;
+  empleadoEditando: Empleado | null = null;
   nuevoEmpleado: Empleado = { nombre: '', cargo: '', hospitalId: 0 };
-  selectedEmpleado: Empleado | null = null;
 
   constructor(
     private empleadoService: EmpleadoService,
@@ -40,7 +40,7 @@ export class EmpleadosComponent implements OnInit {
   cargarEmpleados(): void {
     this.empleadoService.getEmpleados().subscribe(
       (data) => {
-        this.empleados = data.map((empleado) => this.mapearEmpleado(empleado));
+        this.empleados = data.map((empleado: any) => this.mapearEmpleado(empleado));
       },
       (error) => {
         console.error('Error al cargar empleados', error);
@@ -59,101 +59,83 @@ export class EmpleadosComponent implements OnInit {
     );
   }
 
+  abrirModalNuevo(): void {
+    this.empleadoEditando = null;
+    this.nuevoEmpleado = { nombre: '', cargo: '', hospitalId: 0 };
+    this.mostrarModal = true;
+  }
+
+  cerrarModal(): void {
+    this.mostrarModal = false;
+    this.empleadoEditando = null;
+    this.nuevoEmpleado = { nombre: '', cargo: '', hospitalId: 0 };
+  }
+
   onSubmit(): void {
-    if (this.selectedEmpleado) {
-      if (this.selectedEmpleado.id !== undefined) {
-        const updatedEmpleado: Empleado = {
-          nombre: this.selectedEmpleado.nombre,
-          cargo: this.selectedEmpleado.cargo,
-          hospitalId: this.selectedEmpleado.hospitalId,
-        };
-        this.empleadoService
-          .updateEmpleado(this.selectedEmpleado.id, updatedEmpleado)
-          .subscribe(
-            () => {
-              this.cargarEmpleados();
-              this.resetForm();
-            },
-            (error) => {
-              console.error('Error al actualizar empleado', error);
-            }
-          );
-      }
-    } else {
-      this.empleadoService.createEmpleado(this.nuevoEmpleado).subscribe(
+    const empleado = this.empleadoEditando ?? this.nuevoEmpleado;
+
+    if (this.empleadoEditando && this.empleadoEditando.id !== undefined) {
+      const actualizado: Empleado = {
+        nombre: empleado.nombre,
+        cargo: empleado.cargo,
+        hospitalId: empleado.hospitalId
+      };
+      this.empleadoService.updateEmpleado(this.empleadoEditando.id, actualizado).subscribe(
         () => {
           this.cargarEmpleados();
-          this.resetForm();
+          this.cerrarModal();
         },
-        (error) => {
-          console.error('Error al crear empleado', error);
-        }
+        (error) => console.error('Error al actualizar empleado', error)
+      );
+    } else {
+      this.empleadoService.createEmpleado(empleado).subscribe(
+        () => {
+          this.cargarEmpleados();
+          this.cerrarModal();
+        },
+        (error) => console.error('Error al crear empleado', error)
       );
     }
   }
 
   editarEmpleado(empleado: Empleado): void {
-    this.selectedEmpleado = { ...empleado };
+    this.empleadoEditando = { ...empleado };
+    this.mostrarModal = true;
   }
 
-  eliminarEmpleado(id: number): void {
+  eliminarEmpleado(id?: number): void {
+    if (id === undefined) return;
     if (confirm('¿Estás seguro de eliminar este empleado?')) {
       this.empleadoService.deleteEmpleado(id).subscribe(
-        () => {
-          this.cargarEmpleados();
-        },
-        (error) => {
-          console.error('Error al eliminar empleado', error);
-        }
+        () => this.cargarEmpleados(),
+        (error) => console.error('Error al eliminar empleado', error)
       );
     }
   }
 
-  resetForm(): void {
-    this.nuevoEmpleado = { nombre: '', cargo: '', hospitalId: 0 };
-    this.selectedEmpleado = null;
-  }
-
+  // Getters y setters para el formulario (usa binding bidireccional)
   get nombre(): string {
-    return this.selectedEmpleado
-      ? this.selectedEmpleado.nombre
-      : this.nuevoEmpleado.nombre;
+    return this.empleadoEditando ? this.empleadoEditando.nombre : this.nuevoEmpleado.nombre;
   }
-
   set nombre(value: string) {
-    if (this.selectedEmpleado) {
-      this.selectedEmpleado.nombre = value;
-    } else {
-      this.nuevoEmpleado.nombre = value;
-    }
+    if (this.empleadoEditando) this.empleadoEditando.nombre = value;
+    else this.nuevoEmpleado.nombre = value;
   }
 
   get cargo(): string {
-    return this.selectedEmpleado
-      ? this.selectedEmpleado.cargo
-      : this.nuevoEmpleado.cargo;
+    return this.empleadoEditando ? this.empleadoEditando.cargo : this.nuevoEmpleado.cargo;
   }
-
   set cargo(value: string) {
-    if (this.selectedEmpleado) {
-      this.selectedEmpleado.cargo = value;
-    } else {
-      this.nuevoEmpleado.cargo = value;
-    }
+    if (this.empleadoEditando) this.empleadoEditando.cargo = value;
+    else this.nuevoEmpleado.cargo = value;
   }
 
   get hospitalId(): number {
-    return this.selectedEmpleado
-      ? this.selectedEmpleado.hospitalId
-      : this.nuevoEmpleado.hospitalId;
+    return this.empleadoEditando ? this.empleadoEditando.hospitalId : this.nuevoEmpleado.hospitalId;
   }
-
   set hospitalId(value: number) {
-    if (this.selectedEmpleado) {
-      this.selectedEmpleado.hospitalId = value;
-    } else {
-      this.nuevoEmpleado.hospitalId = value;
-    }
+    if (this.empleadoEditando) this.empleadoEditando.hospitalId = value;
+    else this.nuevoEmpleado.hospitalId = value;
   }
 
   private mapearEmpleado(empleado: any): Empleado {
@@ -162,7 +144,7 @@ export class EmpleadosComponent implements OnInit {
       nombre: empleado.nombre,
       cargo: empleado.cargo,
       hospitalId: empleado.hospitalId ?? empleado.hospital_id,
-      hospitalNombre: empleado.hospitalNombre ?? empleado.hospital_nombre,
+      hospitalNombre: empleado.hospitalNombre ?? empleado.hospital_nombre
     };
   }
 }

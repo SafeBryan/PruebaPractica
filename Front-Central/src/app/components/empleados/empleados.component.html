@@ -1,66 +1,96 @@
 <div class="container mt-5">
-  <div class="card shadow">
-    <div class="card-header bg-primary text-white">
-      <h2 class="mb-0">Gestión de Empleados</h2>
-    </div>
-    <div class="card-body">
-      <form
-        (ngSubmit)="onSubmit()"
-        *ngIf="selectedEmpleado || nuevoEmpleado"
-        class="row g-3"
-      >
-        <div class="col-md-4">
-          <label for="nombre" class="form-label">Nombre</label>
-          <input
-            type="text"
-            id="nombre"
-            class="form-control"
-            [(ngModel)]="nombre"
-            name="nombre"
-            required
-          />
-        </div>
+  <!-- Encabezado y botón Crear -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Gestión de Empleados</h2>
+    <button class="btn btn-primary" (click)="abrirModalNuevo()">
+      <i class="bi bi-plus-circle"></i> Crear Empleado
+    </button>
+  </div>
 
-        <div class="col-md-4">
-          <label for="cargo" class="form-label">Cargo</label>
-          <input
-            type="text"
-            id="cargo"
-            class="form-control"
-            [(ngModel)]="cargo"
-            name="cargo"
-            required
-          />
-        </div>
+  <!-- Modal del formulario -->
+  <div
+    class="modal fade show"
+    tabindex="-1"
+    [ngClass]="{ 'd-block': mostrarModal }"
+    style="background-color: rgba(0,0,0,0.5);"
+  >
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="formbold-form-wrapper">
+            <h2 style="text-align:center; margin-bottom: 24px; color: #07074D;">
+              {{ empleadoEditando ? 'Editar Empleado' : 'Crear Empleado' }}
+            </h2>
+            <form (ngSubmit)="onSubmit()" #empleadoForm="ngForm">
+              <div class="formbold-input-flex">
+                <div>
+                  <input
+                    type="text"
+                    name="nombre"
+                    id="nombre"
+                    placeholder="Nombre del empleado"
+                    class="formbold-form-input"
+                    [(ngModel)]="nombre"
+                    required
+                  />
+                  <label for="nombre" class="formbold-form-label">Nombre</label>
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    name="cargo"
+                    id="cargo"
+                    placeholder="Cargo del empleado"
+                    class="formbold-form-input"
+                    [(ngModel)]="cargo"
+                    required
+                  />
+                  <label for="cargo" class="formbold-form-label">Cargo</label>
+                </div>
+              </div>
 
-        <div class="col-md-4">
-          <label for="hospitalId" class="form-label">Hospital</label>
-          <select
-            id="hospitalId"
-            class="form-select"
-            [(ngModel)]="hospitalId"
-            name="hospitalId"
-            required
-          >
-            <option *ngFor="let hospital of hospitales" [value]="hospital.id">
-              {{ hospital.nombre }}
-            </option>
-          </select>
-        </div>
+              <div class="formbold-input-select">
+                <label for="hospitalId" class="formbold-form-label"
+                  >¿Pertenece a hospital?</label
+                >
+                <select
+                  id="hospitalId"
+                  name="hospitalId"
+                  class="formbold-form-select"
+                  [(ngModel)]="hospitalId"
+                  required
+                >
+                  <option value="">Seleccione una opción</option>
+                  <option
+                    *ngFor="let hospital of hospitales"
+                    [value]="hospital.id"
+                  >
+                    {{ hospital.nombre }}
+                  </option>
+                </select>
+              </div>
 
-        <div class="col-12 d-flex justify-content-end mt-3">
-          <button type="submit" class="btn btn-success me-2">
-            <i class="bi bi-save"></i> Guardar
-          </button>
-          <button type="button" class="btn btn-secondary" (click)="resetForm()">
-            <i class="bi bi-x-circle"></i> Cancelar
-          </button>
+              <div class="formbold-button-group d-flex justify-content-end gap-2">
+                <button type="submit" class="formbold-btn primary-btn">
+                  Guardar
+                </button>
+                <button
+                  type="button"
+                  class="formbold-btn secondary-btn cancel-btn"
+                  (click)="cerrarModal()"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 
-  <div class="card shadow mt-5">
+  <!-- Lista de empleados -->
+  <div class="card shadow mt-4">
     <div class="card-header bg-secondary text-white">
       <h4 class="mb-0">Lista de Empleados</h4>
     </div>
@@ -82,7 +112,6 @@
               <td>{{ empleado.nombre }}</td>
               <td>{{ empleado.cargo }}</td>
               <td>{{ empleado.hospitalNombre }}</td>
-              <!-- 👈 Ahora muestra el nombre del hospital -->
               <td>
                 <button
                   class="btn btn-sm btn-info me-1"
@@ -92,9 +121,7 @@
                 </button>
                 <button
                   class="btn btn-sm btn-danger"
-                  (click)="
-                    empleado.id !== undefined && eliminarEmpleado(empleado.id)
-                  "
+                  (click)="eliminarEmpleado(empleado.id)"
                 >
                   <i class="bi bi-trash"></i> Eliminar
                 </button>

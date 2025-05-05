@@ -7,7 +7,7 @@ import { LoginRequest } from '../models/login-request.model';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private nodeUrl = 'http://localhost:3000/api/auth/login';
-  private springUrl = 'http://localhost:8080/api/auth/login';
+  private springUrl = 'http://localhost:8082/api/auth/login';
 
   constructor(private http: HttpClient, private router: Router) {}
 

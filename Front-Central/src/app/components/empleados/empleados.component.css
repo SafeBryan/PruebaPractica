@@ -1,76 +1,207 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f5f5f5;
+}
+
+/* Contenedor principal */
 .container {
-    background-color: #f8f9fa; /* Fondo suave */
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Títulos */
-  h2 {
-    color: #343a40;
-    font-weight: bold;
-  }
-  
-  /* Inputs */
-  input.form-control {
-    border-radius: 10px;
-  }
-  
-  /* Botones */
-  button.btn {
-    border-radius: 8px;
-    min-width: 120px;
-  }
-  
-  /* Botón de crear/editar */
-  button.btn-primary {
-    background-color: #007bff;
-    border: none;
-  }
-  
-  button.btn-primary:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Botón cancelar */
-  button.btn-secondary {
-    background-color: #6c757d;
-    border: none;
-  }
-  
-  button.btn-secondary:hover {
-    background-color: #565e64;
-  }
-  
-  /* Botón editar */
-  button.btn-warning {
-    color: #212529;
-    background-color: #ffc107;
-    border: none;
-  }
-  
-  button.btn-warning:hover {
-    background-color: #e0a800;
-  }
-  
-  /* Botón eliminar */
-  button.btn-danger {
-    background-color: #dc3545;
-    border: none;
-  }
-  
-  button.btn-danger:hover {
-    background-color: #c82333;
-  }
-  
-  /* Tabla */
-  .table thead th {
-    vertical-align: middle;
-    text-align: center;
-  }
-  
-  .table tbody td {
-    vertical-align: middle;
-    text-align: center;
-  }
-  
+  background-color: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Títulos */
+h2 {
+  color: #343a40;
+  font-weight: bold;
+}
+
+/* Botones generales */
+button.btn {
+  border-radius: 8px;
+  min-width: 120px;
+}
+
+/* Botón Crear */
+button.btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+
+button.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Botón Cancelar */
+button.btn-secondary {
+  background-color: #6c757d;
+  border: none;
+}
+
+button.btn-secondary:hover {
+  background-color: #565e64;
+}
+
+/* Botón Editar */
+button.btn-info {
+  background-color: #17a2b8;
+  border: none;
+}
+
+button.btn-info:hover {
+  background-color: #117a8b;
+}
+
+/* Botón Eliminar */
+button.btn-danger {
+  background-color: #dc3545;
+  border: none;
+}
+
+button.btn-danger:hover {
+  background-color: #c82333;
+}
+
+/* Tabla */
+.table thead th,
+.table tbody td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* Modal centrado */
+.modal.show.d-block {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Estilo del formulario */
+.formbold-form-wrapper {
+  margin: 0 auto;
+  max-width: 550px;
+  width: 100%;
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Campos de entrada */
+.formbold-input-flex {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+}
+
+.formbold-input-flex > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column-reverse;
+  min-width: 200px;
+}
+
+.formbold-form-input {
+  width: 100%;
+  padding-bottom: 10px;
+  border: none;
+  border-bottom: 1px solid #DDE3EC;
+  background: #FFFFFF;
+  font-weight: 500;
+  font-size: 16px;
+  color: #07074D;
+  outline: none;
+}
+
+.formbold-form-input::placeholder {
+  color: #536387;
+}
+
+.formbold-form-input:focus {
+  border-color: #6A64F1;
+}
+
+/* Labels */
+.formbold-form-label {
+  color: #07074D;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  display: block;
+  margin-bottom: 18px;
+}
+
+.formbold-form-input:focus + .formbold-form-label {
+  color: #6A64F1;
+}
+
+/* Select */
+.formbold-input-select {
+  margin-bottom: 22px;
+}
+
+.formbold-form-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #DDE3EC;
+  border-radius: 5px;
+  background: #FFFFFF;
+  font-size: 16px;
+  color: #07074D;
+  font-weight: 500;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='none' stroke='%23536387' stroke-width='2' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path d='M19 9l-7 7-7-7'></path></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px 16px;
+}
+
+.formbold-form-select:focus {
+  border-color: #6A64F1;
+}
+
+/* Botones del formulario */
+.formbold-button-group {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.formbold-btn {
+  font-size: 16px;
+  border-radius: 5px;
+  padding: 12px 25px;
+  border: none;
+  font-weight: 500;
+  background-color: #6A64F1;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.formbold-btn:hover {
+  background-color: #5848e5;
+}
+
+.cancel-btn {
+  background-color: #ccc;
+  color: #07074D;
+}
+
+.cancel-btn:hover {
+  background-color: #bbb;
+}
