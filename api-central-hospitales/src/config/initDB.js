@@ -15,10 +15,10 @@ async function createDatabaseAndUser() {
   await rootConnection.query(`
     CREATE USER IF NOT EXISTS '${process.env.MARIADB_USER}'@'%' IDENTIFIED BY '${process.env.MARIADB_PASSWORD}'
   `);
-
   await rootConnection.query(`
     GRANT ALL PRIVILEGES ON \`${process.env.MARIADB_DATABASE}\`.* TO '${process.env.MARIADB_USER}'@'%'
   `);
+  
 
   await rootConnection.query(`FLUSH PRIVILEGES`);
   await rootConnection.end();
