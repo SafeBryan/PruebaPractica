@@ -27,13 +27,16 @@ async function createDatabaseAndUser() {
 }
 
 async function createTables() {
-  const connection = await pool.getConnection();  // Obtén una conexión del pool
+  const connection = await pool.getConnection();
 
+  // ⚙️ Tabla usuarios con rol y medico_id
   await connection.execute(`
     CREATE TABLE IF NOT EXISTS usuarios (
       id INT AUTO_INCREMENT PRIMARY KEY,
       username VARCHAR(100) NOT NULL UNIQUE,
       password VARCHAR(255) NOT NULL,
+      rol VARCHAR(50) NOT NULL,
+      medico_id BIGINT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `);
@@ -56,7 +59,7 @@ async function createTables() {
 
   await connection.execute(`
     CREATE TABLE IF NOT EXISTS medicos (
-      id INT AUTO_INCREMENT PRIMARY KEY,
+      id INT PRIMARY KEY,
       nombre VARCHAR(100) NOT NULL,
       especialidad_id INT,
       hospital_id VARCHAR(255),
@@ -75,8 +78,7 @@ async function createTables() {
     )
   `);
 
-  connection.release(); 
-
+  connection.release();
   console.log('✅ Tablas creadas (si no existían)');
 }
 

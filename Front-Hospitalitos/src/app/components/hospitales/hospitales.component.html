@@ -1,0 +1,67 @@
+<div class="container mt-5">
+    <div class="card shadow">
+      <div class="card-header bg-primary text-white">
+        <h2 class="mb-0">Gestión de Hospitales</h2>
+      </div>
+      <div class="card-body">
+        <form (ngSubmit)="onSubmit()" *ngIf="selectedHospital || nuevoHospital" class="row g-3">
+          <div class="col-md-6">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" id="nombre" class="form-control" [(ngModel)]="nombre" name="nombre" required />
+          </div>
+  
+          <div class="col-md-6">
+            <label for="direccion" class="form-label">Dirección</label>
+            <input type="text" id="direccion" class="form-control" [(ngModel)]="direccion" name="direccion" required />
+          </div>
+  
+          <div class="col-12 d-flex justify-content-end mt-3">
+            <button type="submit" class="btn btn-success me-2">
+              <i class="bi bi-save"></i> Guardar
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="resetForm()">
+              <i class="bi bi-x-circle"></i> Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  
+    <div class="card shadow mt-5">
+      <div class="card-header bg-secondary text-white">
+        <h4 class="mb-0">Lista de Hospitales</h4>
+      </div>
+      <div class="card-body p-0">
+        <div *ngIf="hospitales.length > 0" class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let hospital of hospitales">
+                <td>{{ hospital.nombre }}</td>
+                <td>{{ hospital.direccion }}</td>
+                <td>
+                  <button class="btn btn-sm btn-info me-1" (click)="editarHospital(hospital)">
+                    <i class="bi bi-pencil-square"></i> Editar
+                  </button>
+                  <button class="btn btn-sm btn-danger" (click)="hospital.id !== undefined && eliminarHospital(+hospital.id)">
+                    <i class="bi bi-trash"></i> Eliminar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+  
+        <div *ngIf="hospitales.length === 0" class="p-3 text-center">
+          <p class="text-muted">No hay hospitales disponibles.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        // ⛔️ Ignora el filtro en /api/auth/login
+        // ⛔️ Ignorar filtro para login
         if (path.equals("/api/auth/login")) {
             filterChain.doFilter(request, response);
             return;
@@ -40,40 +40,46 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
 
-        // 🔍 LOG 1: Verifica si llega el header Authorization
-        System.out.println("🛡️ Header Authorization recibido: " + authHeader);
-
+        // ✅ Validar existencia y formato del token
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            System.out.println("⚠️ Token no válido o ausente");
+            System.out.println("⚠️ Header inválido o ausente: " + authHeader);
             filterChain.doFilter(request, response);
             return;
         }
 
-        final String jwt = authHeader.substring(7);
+        final String token = authHeader.substring(7).trim();
 
-        // 🔍 LOG 2: Verifica el JWT recibido
-        System.out.println("🔐 Token JWT recibido: " + jwt);
+        if (token.isEmpty() || token.split("\\.").length != 3) {
+            System.out.println("❌ Token vacío o malformado: " + token);
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-        final String username = jwtService.extractUsername(jwt);
+        try {
+            final String username = jwtService.extractUsername(token);
+            System.out.println("👤 Usuario extraído del token: " + username);
 
-        // 🔍 LOG 3: Verifica el usuario extraído del token
-        System.out.println("👤 Usuario extraído del token: " + username);
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            if (jwtService.isTokenValid(jwt, userDetails)) {
-                System.out.println("✅ Token válido. Usuario autenticado: " + userDetails.getUsername());
+                if (jwtService.isTokenValid(token, userDetails)) {
+                    System.out.println("✅ Token válido. Usuario autenticado: " + username);
 
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            } else {
-                System.out.println("❌ Token inválido para el usuario: " + username);
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities()
+                            );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                } else {
+                    System.out.println("❌ Token inválido para el usuario: " + username);
+                }
             }
+        } catch (Exception e) {
+            System.out.println("❌ Error al validar token: " + e.getMessage());
+            e.printStackTrace();
         }
 
         filterChain.doFilter(request, response);

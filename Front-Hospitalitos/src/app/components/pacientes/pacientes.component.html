@@ -1,0 +1,90 @@
+<div class="container mt-5">
+  <!-- FORMULARIO -->
+  <div class="card shadow mb-4">
+    <div class="card-header bg-success text-white">
+      <h4>{{ pacienteSeleccionado?.id ? "Editar" : "Registrar" }} Paciente</h4>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="guardarPaciente()" class="row g-3">
+        <div class="col-md-4">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Nombre"
+            [(ngModel)]="pacienteForm.nombre"
+            name="nombre"
+            required
+          />
+        </div>
+        <div class="col-md-2">
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Edad"
+            [(ngModel)]="pacienteForm.edad"
+            name="edad"
+            required
+          />
+        </div>
+        <div class="col-md-6">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Historial Médico"
+            [(ngModel)]="pacienteForm.historial"
+            name="historial"
+            required
+          />
+        </div>
+        <div class="col-12 d-flex justify-content-end">
+          <button type="submit" class="btn btn-primary me-2">
+            {{ pacienteSeleccionado?.id ? "Actualizar" : "Guardar" }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="resetForm()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TABLA DE PACIENTES -->
+  <div class="card shadow">
+    <div class="card-header bg-info text-white">
+      <h4>Lista de Pacientes</h4>
+    </div>
+    <div class="card-body p-0">
+      <div *ngIf="pacientes.length > 0" class="table-responsive">
+        <table class="table table-striped mb-0">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Edad</th>
+              <th>Historial</th>
+              <th class="text-end">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let paciente of pacientes">
+              <td>{{ paciente.nombre }}</td>
+              <td>{{ paciente.edad }}</td>
+              <td>{{ paciente.historial }}</td>
+              <td class="text-end">
+                <button
+                  class="btn btn-sm btn-warning me-2"
+                  (click)="editarPaciente(paciente)"
+                >
+                  Editar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="pacientes.length === 0" class="p-3 text-center">
+        <p class="text-muted">No hay pacientes registrados.</p>
+      </div>
+    </div>
+  </div>
+</div>

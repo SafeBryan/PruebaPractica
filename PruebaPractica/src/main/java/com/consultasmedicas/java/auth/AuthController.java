@@ -1,9 +1,8 @@
 package com.consultasmedicas.java.auth;
 
+import com.consultasmedicas.java.models.Usuario;
+import com.consultasmedicas.java.repositories.UsuarioRepository;
 import com.consultasmedicas.java.security.JwtService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -11,7 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
-@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -22,11 +20,9 @@ public class AuthController {
     @Autowired
     private JwtService jwtService;
 
-    @Operation(
-            summary = "Iniciar sesión",
-            description = "Autentica usuario y devuelve token JWT"
-    )
-    @SecurityRequirements
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
         try {
@@ -37,7 +33,10 @@ public class AuthController {
                     )
             );
 
-            String token = jwtService.generateToken(request.getUsername());
+            Usuario usuario = usuarioRepository.findByUsername(request.getUsername())
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+            String token = jwtService.generateToken(usuario);
             return new LoginResponse(token);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Credenciales inválidas");

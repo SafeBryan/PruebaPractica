@@ -1,5 +1,6 @@
 package com.consultasmedicas.java.security;
 
+import com.consultasmedicas.java.models.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -7,44 +8,49 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "miClaveSuperSecretaDe256BitsParaJWT1234567890abcdef";
-    private static final long JWT_EXPIRATION_MS = 1000 * 60 * 60 * 10; // 10 horas
+    // ✅ Usa una clave de mínimo 32 caracteres para HS256
+    private final SecretKey SECRET_KEY = Keys.hmacShaKeyFor("super-secret-key-para-firmar-jwt-2025!".getBytes());
+
+    private final long EXPIRATION = 1000 * 60 * 60 * 5; // 5 horas
+
+    public String generateToken(Usuario usuario) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("rol", usuario.getRol());
+        claims.put("id", usuario.getId());
+        claims.put("medicoId", usuario.getMedicoId());
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(usuario.getUsername())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
+                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
+                .compact();
+    }
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        return extractAllClaims(token).getSubject();
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
+    public Long extractMedicoId(String token) {
+        Object medicoId = extractAllClaims(token).get("medicoId");
+        return medicoId != null ? ((Number) medicoId).longValue() : null;
     }
 
-    public String generateToken(String username) {
-        return generateToken(new HashMap<>(), username);
-    }
-
-    public String generateToken(Map<String, Object> extraClaims, String username) {
-        return Jwts.builder()
-                .setClaims(extraClaims)
-                .setSubject(username)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_MS))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-                .compact();
+    public String extractRol(String token) {
+        return (String) extractAllClaims(token).get("rol");
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {
@@ -52,19 +58,14 @@ public class JwtService {
     }
 
     private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+        return extractAllClaims(token).getExpiration();
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSigningKey())
+        return Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-    }
-
-    private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 }
