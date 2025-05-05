@@ -14,7 +14,7 @@ export interface Empleado {
   providedIn: 'root'
 })
 export class EmpleadoService {
-  private apiUrl = 'http://localhost:3000/api/empleados'; // Cambiar si es necesario
+  private apiUrl = 'http://74.235.206.253:3000/api/empleados'; // Cambiar si es necesario
 
   constructor(private http: HttpClient) { }
 

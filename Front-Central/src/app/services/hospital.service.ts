@@ -8,7 +8,7 @@ import { Hospital } from '../models/hospital.model';
 })
 export class HospitalService {
 
-  private apiUrl = 'http://localhost:3000/api/hospitales'; // <- Cambia esto si tu backend corre en otra URL o puerto
+  private apiUrl = 'http://74.235.206.253:3000/api/hospitales'; // <- Cambia esto si tu backend corre en otra URL o puerto
 
   constructor(private http: HttpClient) { }
 

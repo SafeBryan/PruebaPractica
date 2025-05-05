@@ -18,7 +18,15 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Middlewares
-app.use(cors());
+const corsOptions = {
+  origin: ['http://localhost:4200', 'http://localhost:62556', 'http://74.235.206.253'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'authorization-spring'],
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 // Swagger config

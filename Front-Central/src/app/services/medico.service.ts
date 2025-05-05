@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MedicoService {
-  private apiUrl = 'http://localhost:3000/api/medicos'; // Asegúrate que esta URL sea la correcta
+  private apiUrl = 'http://74.235.206.253:3000/api/medicos'; // Asegúrate que esta URL sea la correcta
 
   constructor(private http: HttpClient) {}
 

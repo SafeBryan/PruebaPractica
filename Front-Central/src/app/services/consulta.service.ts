@@ -14,7 +14,7 @@ export interface Consulta {
   providedIn: 'root',
 })
 export class ConsultasService {
-  private apiUrl = 'http://localhost:3000/api/hospitales'; // ⚡ Ajustado correctamente
+  private apiUrl = 'http://74.235.206.253:3000/api/hospitales'; // ⚡ Ajustado correctamente
 
   constructor(private http: HttpClient) {}
 

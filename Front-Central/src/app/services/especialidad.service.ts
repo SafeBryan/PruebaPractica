@@ -8,7 +8,7 @@ import { Especialidad } from '../models/especialidad.model'; // Ajusta el path s
 })
 export class EspecialidadService {
 
-  private apiUrl = 'http://localhost:3000/api/especialidades'; // Cambia el puerto/URL si tu backend corre en otro
+  private apiUrl = 'http://74.235.206.253:3000/api/especialidades'; // Cambia el puerto/URL si tu backend corre en otro
 
   constructor(private http: HttpClient) { }
 
