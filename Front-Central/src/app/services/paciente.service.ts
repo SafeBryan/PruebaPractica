@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class PacienteService {
-  private apiUrl = 'http://20.121.44.245:8080/pacientes'; // Spring Boot
+  private apiUrl = 'https://hospital-cuenca.duckdns.org/pacientes'; // Spring Boot
 
   constructor(private http: HttpClient) {}
 

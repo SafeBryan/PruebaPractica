@@ -5,7 +5,7 @@ import { Paciente } from '../models/paciente.model';
 
 @Injectable({ providedIn: 'root' })
 export class PacienteService {
-  private apiUrl = 'http://135.222.40.65:8080/pacientes';
+  private apiUrl = 'https://hospital-cuenca.duckdns.org/pacientes';
 
   constructor(private http: HttpClient) {}
 
