@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Hospital } from '../models/hospital.model';
-
+import { hostNode } from './host';
+import { hostSpring } from './host';
 @Injectable({
   providedIn: 'root'
 })
 export class HospitalService {
 
-  private apiUrl = 'http://localhost:3000/api/hospitales'; // <- Cambia esto si tu backend corre en otra URL o puerto
+  private apiUrl = `http://${hostNode}:3000/api/hospitales`; // <- Cambia esto si tu backend corre en otra URL o puerto
 
   constructor(private http: HttpClient) { }
 

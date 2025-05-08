@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Medico } from '../models/medico.model';
 import { Observable } from 'rxjs';
-
+import { hostNode } from './host';
+import { hostSpring } from './host';
 @Injectable({
   providedIn: 'root',
 })
 export class MedicoService {
-  private apiUrl = 'http://74.235.206.253:3000/api/medicos'; // Asegúrate que esta URL sea la correcta
+  private apiUrl = `http://${hostNode}:3000/api/medicos`; // Asegúrate que esta URL sea la correcta
 
   constructor(private http: HttpClient) {}
 

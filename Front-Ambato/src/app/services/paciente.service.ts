@@ -2,10 +2,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Paciente } from '../models/paciente.model';
-
+import { hostNode } from './host';
+import { hostSpring } from './host';
 @Injectable({ providedIn: 'root' })
 export class PacienteService {
-  private apiUrl = 'http://20.121.44.245:8080/pacientes';
+  private apiUrl = `http:///${hostSpring}:8080/pacientes`;
 
   constructor(private http: HttpClient) {}
 

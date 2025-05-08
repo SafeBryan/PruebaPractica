@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Especialidad } from '../models/especialidad.model'; // Ajusta el path si necesario
-
+import { hostNode } from './host';
+import { hostSpring } from './host';
 @Injectable({
   providedIn: 'root'
 })
 export class EspecialidadService {
 
-  private apiUrl = 'http://localhost:3000/api/especialidades'; // Cambia el puerto/URL si tu backend corre en otro
+  private apiUrl = `http://${hostNode}:3000/api/especialidades`; // Cambia el puerto/URL si tu backend corre en otro
 
   constructor(private http: HttpClient) { }
 

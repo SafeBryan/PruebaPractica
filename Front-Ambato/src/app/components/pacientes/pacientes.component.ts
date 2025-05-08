@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 import { PacienteService } from '../../services/paciente.service';
 import { Paciente } from '../../models/paciente.model';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-pacientes',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, RouterModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule, HttpClientModule],
   templateUrl: './pacientes.component.html',
   styleUrls: ['./pacientes.component.css'],
 })
@@ -26,14 +26,18 @@ export class PacientesComponent implements OnInit {
 
   cargarPacientes(): void {
     this.pacienteService.getPacientes().subscribe({
-      next: (data) => (this.pacientes = data),
-      error: (err) => console.error('❌ Error al cargar pacientes', err),
+      next: (data) => {
+        this.pacientes = data;
+      },
+      error: (err) => {
+        console.error('❌ Error al cargar pacientes', err);
+      },
     });
   }
 
   guardarPaciente(): void {
     if (this.pacienteSeleccionado) {
-      // Actualizar
+      // Actualizar paciente existente
       this.pacienteService
         .actualizarPaciente(this.pacienteSeleccionado.id!, this.pacienteForm)
         .subscribe({
@@ -41,16 +45,20 @@ export class PacientesComponent implements OnInit {
             this.cargarPacientes();
             this.resetForm();
           },
-          error: (err) => console.error('❌ Error al actualizar paciente', err),
+          error: (err) => {
+            console.error('❌ Error al actualizar paciente', err);
+          },
         });
     } else {
-      // Crear nuevo
+      // Crear nuevo paciente
       this.pacienteService.crearPaciente(this.pacienteForm).subscribe({
         next: () => {
           this.cargarPacientes();
           this.resetForm();
         },
-        error: (err) => console.error('❌ Error al crear paciente', err),
+        error: (err) => {
+          console.error('❌ Error al crear paciente', err);
+        },
       });
     }
   }
@@ -64,7 +72,9 @@ export class PacientesComponent implements OnInit {
     if (confirm('¿Estás seguro de eliminar este paciente?')) {
       this.pacienteService.eliminarPaciente(id).subscribe({
         next: () => this.cargarPacientes(),
-        error: (err) => console.error('❌ Error al eliminar paciente', err),
+        error: (err) => {
+          console.error('❌ Error al eliminar paciente', err);
+        },
       });
     }
   }

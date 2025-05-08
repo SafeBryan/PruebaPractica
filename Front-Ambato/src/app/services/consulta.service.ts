@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Consulta } from '../models/consulta.model';
-
+import { hostSpring } from './host';
 @Injectable({
   providedIn: 'root',
 })
 export class ConsultasService {
-  private apiUrl = 'http://20.121.44.245:8080/consultas';
+  private apiUrl = `http://${hostSpring}:8080/consultas`;
 
   constructor(private http: HttpClient) {}
 

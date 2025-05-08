@@ -3,14 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { LoginRequest } from '../models/login-request.model';
-
+import { hostNode } from './host';
+import { hostSpring } from './host';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
    private nodeIP = 'localhost';
    private springIP = 'localhost'; 
   
-  private nodeUrl = `http://${this.nodeIP}:3000/api/auth/login`;
-  private springUrl = `http://${this.springIP}:8080/api/auth/login`;
+  private nodeUrl = `http://${hostNode }:3000/api/auth/login`;
+  private springUrl = `http://${hostSpring}:8080/api/auth/login`;
 
   constructor(private http: HttpClient, private router: Router) {}
 

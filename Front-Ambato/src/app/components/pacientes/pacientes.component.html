@@ -1,90 +1,402 @@
-<div class="container mt-5">
-  <!-- FORMULARIO -->
-  <div class="card shadow mb-4">
-    <div class="card-header bg-success text-white">
-      <h4>{{ pacienteSeleccionado?.id ? "Editar" : "Registrar" }} Paciente</h4>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Pacientes</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --teal-500: #14b8a6;
+      --teal-600: #0d9488;
+      --teal-700: #0f766e;
+      --blue-500: #3b82f6;
+      --blue-600: #2563eb;
+      --blue-700: #1d4ed8;
+      --indigo-500: #6366f1;
+      --indigo-600: #4f46e5;
+      --purple-500: #a855f7;
+      --purple-600: #9333ea;
+      --amber-500: #f59e0b;
+      --amber-600: #d97706;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --white: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      color: var(--gray-700);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .card {
+      background-color: var(--white);
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .card-header {
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-header-teal {
+      background: linear-gradient(to right, var(--teal-600), var(--teal-500));
+      color: var(--white);
+    }
+
+    .card-header-purple {
+      background: linear-gradient(to right, var(--purple-600), var(--purple-500));
+      color: var(--white);
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      margin: 0;
+    }
+
+    .card-title i {
+      margin-right: 0.5rem;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .card-body-no-padding {
+      padding: 0;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .form-group-small {
+      flex: 0 0 120px;
+    }
+
+    .form-group-large {
+      flex: 2;
+    }
+
+    .form-label {
+      display: flex;
+      align-items: center;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--gray-700);
+    }
+
+    .form-label i {
+      color: var(--teal-500);
+      margin-right: 0.5rem;
+    }
+
+    .form-control {
+      display: block;
+      width: 100%;
+      padding: 0.625rem 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--gray-700);
+      background-color: var(--white);
+      background-clip: padding-box;
+      border: 1px solid var(--gray-300);
+      border-radius: 0.375rem;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .form-control:focus {
+      border-color: var(--teal-500);
+      outline: 0;
+      box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.25);
+    }
+
+    .form-control::placeholder {
+      color: var(--gray-400);
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.625rem 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      line-height: 1.5;
+      text-align: center;
+      text-decoration: none;
+      vertical-align: middle;
+      cursor: pointer;
+      user-select: none;
+      border: 1px solid transparent;
+      border-radius: 0.375rem;
+      transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .btn i {
+      margin-right: 0.5rem;
+    }
+
+    .btn-primary {
+      color: var(--white);
+      background-color: var(--blue-600);
+      border-color: var(--blue-600);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--blue-700);
+      border-color: var(--blue-700);
+    }
+
+    .btn-secondary {
+      color: var(--white);
+      background-color: var(--gray-600);
+      border-color: var(--gray-600);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--gray-700);
+      border-color: var(--gray-700);
+    }
+
+    .btn-warning {
+      color: var(--gray-700);
+      background-color: var(--amber-500);
+      border-color: var(--amber-500);
+    }
+
+    .btn-warning:hover {
+      background-color: var(--amber-600);
+      border-color: var(--amber-600);
+    }
+
+    .btn-sm {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.75rem;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background-color: var(--gray-50);
+      color: var(--gray-700);
+      font-weight: 500;
+      text-align: left;
+      padding: 1rem 1.5rem;
+      font-size: 0.875rem;
+    }
+
+    td {
+      padding: 1rem 1.5rem;
+      font-size: 0.875rem;
+      border-top: 1px solid var(--gray-200);
+    }
+
+    tr:nth-child(odd) {
+      background-color: var(--gray-50);
+    }
+
+    tr:hover {
+      background-color: var(--gray-100);
+    }
+
+    .text-end {
+      text-align: right;
+    }
+
+    .empty-state {
+      padding: 3rem 1.5rem;
+      text-align: center;
+      color: var(--gray-500);
+    }
+
+    .empty-state i {
+      font-size: 3rem;
+      color: var(--gray-300);
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .me-2 {
+      margin-right: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .form-row {
+        flex-direction: column;
+      }
+      
+      .form-group, .form-group-small, .form-group-large {
+        flex: 1 1 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- FORMULARIO -->
+    <div class="card">
+      <div class="card-header card-header-teal">
+        <h4 class="card-title">
+          <i class="bi bi-person-plus"></i> {{ pacienteSeleccionado?.id ? "Editar" : "Registrar" }} Paciente
+        </h4>
+      </div>
+      <div class="card-body">
+        <form (ngSubmit)="guardarPaciente()" class="form">
+          <div class="form-row">
+            <div class="form-group form-group-large">
+              <label class="form-label">
+                <i class="bi bi-person"></i> Nombre
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Nombre completo del paciente"
+                [(ngModel)]="pacienteForm.nombre"
+                name="nombre"
+                required
+              />
+            </div>
+            
+            <div class="form-group form-group-small">
+              <label class="form-label">
+                <i class="bi bi-calendar"></i> Edad
+              </label>
+              <input
+                type="number"
+                class="form-control"
+                placeholder="Edad"
+                [(ngModel)]="pacienteForm.edad"
+                name="edad"
+                required
+              />
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">
+                <i class="bi bi-journal-medical"></i> Historial Médico
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Resumen del historial médico"
+                [(ngModel)]="pacienteForm.historial"
+                name="historial"
+                required
+              />
+            </div>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-{{ pacienteSeleccionado?.id ? 'pencil-square' : 'save' }}"></i>
+              {{ pacienteSeleccionado?.id ? "Actualizar" : "Guardar" }}
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="resetForm()">
+              <i class="bi bi-x-circle"></i> Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-    <div class="card-body">
-      <form (ngSubmit)="guardarPaciente()" class="row g-3">
-        <div class="col-md-4">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Nombre"
-            [(ngModel)]="pacienteForm.nombre"
-            name="nombre"
-            required
-          />
+
+    <!-- TABLA DE PACIENTES -->
+    <div class="card">
+      <div class="card-header card-header-purple">
+        <h4 class="card-title">
+          <i class="bi bi-people"></i> Lista de Pacientes
+        </h4>
+      </div>
+      <div class="card-body-no-padding">
+        <div *ngIf="pacientes.length > 0" class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th><i class="bi bi-person me-2"></i>Nombre</th>
+                <th><i class="bi bi-calendar me-2"></i>Edad</th>
+                <th><i class="bi bi-journal-medical me-2"></i>Historial</th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let paciente of pacientes">
+                <td>{{ paciente.nombre }}</td>
+                <td>{{ paciente.edad }}</td>
+                <td>{{ paciente.historial }}</td>
+                <td class="text-end">
+                  <button
+                    class="btn btn-sm btn-warning"
+                    (click)="editarPaciente(paciente)"
+                  >
+                    <i class="bi bi-pencil"></i> Editar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="col-md-2">
-          <input
-            type="number"
-            class="form-control"
-            placeholder="Edad"
-            [(ngModel)]="pacienteForm.edad"
-            name="edad"
-            required
-          />
+
+        <div *ngIf="pacientes.length === 0" class="empty-state">
+          <i class="bi bi-people"></i>
+          <p>No hay pacientes registrados.</p>
         </div>
-        <div class="col-md-6">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Historial Médico"
-            [(ngModel)]="pacienteForm.historial"
-            name="historial"
-            required
-          />
-        </div>
-        <div class="col-12 d-flex justify-content-end">
-          <button type="submit" class="btn btn-primary me-2"  (click)="guardarPaciente()">
-            {{ pacienteSeleccionado?.id ? "Actualizar" : "Guardar" }}
-          </button>
-          <button type="button" class="btn btn-secondary" (click)="resetForm()">
-            Cancelar
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
-
-  <!-- TABLA DE PACIENTES -->
-  <div class="card shadow">
-    <div class="card-header bg-info text-white">
-      <h4>Lista de Pacientes</h4>
-    </div>
-    <div class="card-body p-0">
-      <div *ngIf="pacientes.length > 0" class="table-responsive">
-        <table class="table table-striped mb-0">
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Edad</th>
-              <th>Historial</th>
-              <th class="text-end">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let paciente of pacientes">
-              <td>{{ paciente.nombre }}</td>
-              <td>{{ paciente.edad }}</td>
-              <td>{{ paciente.historial }}</td>
-              <td class="text-end">
-                <button
-                  class="btn btn-sm btn-warning me-2"
-                  (click)="editarPaciente(paciente)"
-                >
-                  Editar
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div *ngIf="pacientes.length === 0" class="p-3 text-center">
-        <p class="text-muted">No hay pacientes registrados.</p>
-      </div>
-    </div>
-  </div>
-</div>
+</body>
+</html>
