@@ -18,7 +18,7 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 .addServersItem(new Server()
-                        .url("https://hospital-cuenca.duckdns.org")
+                        .url("https://hospital-guayaquil.duckdns.org")
                         .description("Servidor en producción (HTTPS)"))
                 .info(new Info()
                         .title("API de Consultas Médicas")
