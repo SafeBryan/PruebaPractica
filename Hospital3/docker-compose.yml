@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  mariadb-central:
+  mariadb:
     image: mariadb:11.3
-    container_name: mariadb-central
+    container_name: mariadb-consultas3
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
@@ -13,16 +13,14 @@ services:
     ports:
       - "${MARIADB_PORT}:3306"
     volumes:
-      - mariadb_central_data:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - central-net
-    command:
-      --bind-address=0.0.0.0   # Permite conexiones desde cualquier dirección IP
+      - consultas-net
 
 volumes:
-  mariadb_central_data:
+  mariadb_data:
 
 networks:
-  central-net:
+  consultas-net:
     driver: bridge

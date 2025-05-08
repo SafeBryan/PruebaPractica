@@ -2,6 +2,6 @@
 CREATE DATABASE IF NOT EXISTS api_central_hospitales;
 
 -- Crear usuario y permisos (redundante por MARIADB_USER, pero por si acaso)
-CREATE USER IF NOT EXISTS 'safebryan'@'%' IDENTIFIED BY '081012';
-GRANT ALL PRIVILEGES ON api_central_hospitales.* TO 'safebryan'@'%';
+CREATE USER IF NOT EXISTS '${MARIADB_USER}'@'%' IDENTIFIED BY '${MARIADB_PASSWORD}';
+GRANT ALL PRIVILEGES ON ${MARIADB_DATABASE}.* TO '${MARIADB_USER}'@'%';
 FLUSH PRIVILEGES;
