@@ -6,7 +6,7 @@ import { hostNode } from './host';
 import { hostSpring } from './host';
 @Injectable({ providedIn: 'root' })
 export class PacienteService {
-  private apiUrl = `http:///${hostSpring}:8080/pacientes`;
+  private apiUrl = `https:///${hostSpring}:8080/pacientes`;
 
   constructor(private http: HttpClient) {}
 

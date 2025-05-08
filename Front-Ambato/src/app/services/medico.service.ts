@@ -8,7 +8,7 @@ import { hostSpring } from './host';
   providedIn: 'root',
 })
 export class MedicoService {
-  private apiUrl = `http://${hostNode}:3000/api/medicos`; // Asegúrate que esta URL sea la correcta
+  private apiUrl = `https://${hostNode}:3000/api/medicos`; // Asegúrate que esta URL sea la correcta
 
   constructor(private http: HttpClient) {}
 

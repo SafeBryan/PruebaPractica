@@ -9,7 +9,7 @@ import { hostSpring } from './host';
 })
 export class EspecialidadService {
 
-  private apiUrl = `http://${hostNode}:3000/api/especialidades`; // Cambia el puerto/URL si tu backend corre en otro
+  private apiUrl = `https://${hostNode}:3000/api/especialidades`; // Cambia el puerto/URL si tu backend corre en otro
 
   constructor(private http: HttpClient) { }
 

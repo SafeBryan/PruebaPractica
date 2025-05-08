@@ -10,8 +10,8 @@ export class AuthService {
    private nodeIP = 'localhost';
    private springIP = 'localhost'; 
   
-  private nodeUrl = `http://${hostNode }:3000/api/auth/login`;
-  private springUrl = `http://${hostSpring}:8080/api/auth/login`;
+  private nodeUrl = `https://${hostNode }:3000/api/auth/login`;
+  private springUrl = `https://${hostSpring}:8080/api/auth/login`;
 
   constructor(private http: HttpClient, private router: Router) {}
 

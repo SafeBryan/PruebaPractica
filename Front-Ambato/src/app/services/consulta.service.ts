@@ -7,7 +7,7 @@ import { hostSpring } from './host';
   providedIn: 'root',
 })
 export class ConsultasService {
-  private apiUrl = `http://${hostSpring}:8080/consultas`;
+  private apiUrl = `https://${hostSpring}:8080/consultas`;
 
   constructor(private http: HttpClient) {}
 
