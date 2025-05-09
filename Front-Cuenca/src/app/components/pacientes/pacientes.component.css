@@ -1,0 +1,62 @@
+/* Aplica esto en el CSS base o en cada módulo si está separado */
+.container-registro {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  color: #f0f0f0; /* Blanco suave para buen contraste */
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f0f0f0; /* asegúrate que el texto sea claro */
+}
+
+.card-title,
+.form-label,
+.table-custom th,
+.table-custom td,
+.badge,
+.empty-state {
+  color: #f0f0f0;
+}
+
+.table-custom th {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.table-custom td {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Botones */
+.btn {
+  font-weight: bold;
+  border-radius: 0.5rem;
+  border: none;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-teal {
+  background-color: var(--teal-600);
+  color: white;
+}
+
+.btn-teal:hover {
+  background-color: var(--teal-700);
+}
+
+.btn-secondary {
+  background-color: var(--gray-600);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: var(--gray-700);
+}

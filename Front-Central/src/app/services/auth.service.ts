@@ -3,36 +3,43 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { LoginRequest } from '../models/login-request.model';
+import { environment } from '../../environment/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private nodeUrl = 'http://74.235.206.253:3000/api/auth/login';
-  private springUrl = 'http://20.121.44.245:8080/api/auth/login';
-
   constructor(private http: HttpClient, private router: Router) {}
 
+  /**
+   * Login para central + hospital (Node + Spring)
+   * @param data credenciales del usuario
+   * @param hospitalKey clave del hospital ('cuenca', 'guayaquil', 'latacunga')
+   */
   loginAmbos(
-    data: LoginRequest
+    data: LoginRequest,
+    hospitalKey: 'cuenca' | 'guayaquil' | 'latacunga'
   ): Observable<{ tokenNode: string; tokenSpring: string }> {
-    return new Observable((observer) => {
-      this.http.post<{ token: string }>(this.nodeUrl, data).subscribe({
-        next: (resNode) => {
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('tokenNode', resNode.token);
-          }
+    const nodeUrl = `${environment.backends.central.nodeUrl}/auth/login`;
+    const springUrl = `${environment.backends[hospitalKey].springUrl}/auth/login`;
 
-          this.http.post<{ token: string }>(this.springUrl, data).subscribe({
+    return new Observable((observer) => {
+      // Login al central (Node.js)
+      this.http.post<{ token: string }>(nodeUrl, data).subscribe({
+        next: (resNode) => {
+          localStorage.setItem('tokenNode', resNode.token);
+
+          // Login al hospital (Spring Boot)
+          this.http.post<{ token: string }>(springUrl, data).subscribe({
             next: (resSpring) => {
-              if (typeof window !== 'undefined') {
-                localStorage.setItem('tokenSpring', resSpring.token);
-                localStorage.setItem(
-                  'usuario',
-                  JSON.stringify({
-                    tokenNode: resNode.token,
-                    tokenSpring: resSpring.token,
-                  })
-                );
-              }
+              localStorage.setItem('tokenSpring', resSpring.token);
+              localStorage.setItem('hospitalSeleccionado', hospitalKey);
+              localStorage.setItem(
+                'usuario',
+                JSON.stringify({
+                  tokenNode: resNode.token,
+                  tokenSpring: resSpring.token,
+                  hospital: hospitalKey,
+                })
+              );
 
               observer.next({
                 tokenNode: resNode.token,
@@ -49,22 +56,20 @@ export class AuthService {
   }
 
   logout(): void {
-    if (typeof window !== 'undefined') {
-      localStorage.clear();
-    }
+    localStorage.clear();
     this.router.navigate(['/login']);
   }
 
   getTokenNode(): string | null {
-    return typeof window !== 'undefined'
-      ? localStorage.getItem('tokenNode')
-      : null;
+    return localStorage.getItem('tokenNode');
   }
 
   getTokenSpring(): string | null {
-    return typeof window !== 'undefined'
-      ? localStorage.getItem('tokenSpring')
-      : null;
+    return localStorage.getItem('tokenSpring');
+  }
+
+  getHospitalSeleccionado(): 'cuenca' | 'guayaquil' | 'latacunga' | null {
+    return localStorage.getItem('hospitalSeleccionado') as any;
   }
 
   isLoggedIn(): boolean {
